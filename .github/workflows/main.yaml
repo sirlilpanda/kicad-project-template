@@ -28,7 +28,7 @@ jobs:
           path: |
             ${{ github.workspace }}/Hardware_Docs/sch.pdf
             ${{ github.workspace }}/Hardware_Docs/bom.csv
-            ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
+            ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
       - name: Run KiCad ERC
         id: erc
