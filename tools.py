@@ -1,11 +1,11 @@
-## yes im using these for a cross platform way to run commands
+## yes im "ki"template"
 import sys
 import os
 import subprocess
 from pathlib import Path
 
 kicad_cli_path = "kicad-cli"
-project_name = "template"
+project_name = "ki-template"
 
 if (sys.platform == "darwin"):
     kicad_cli_path = "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
@@ -60,11 +60,10 @@ def change_var_declaration(var_name, new_declaration):
     old_path = file[kicad_cli_path_index:kicad_cli_path_end_index]
     
     with open(__file__, "w") as txt:
-        txt.write(file.replace(old_path, f'"{new_declaration}"'))
+        txt.write(file.replace(old_path, f'"{new_declaration}"', 1))
 
 def rename_project(new_name = "template"):
     """renames the kicad project"""
-
     path = str(Path(f"Hardware/{project_name}"))
     files = os.listdir(path)
 
@@ -73,9 +72,29 @@ def rename_project(new_name = "template"):
         os.rename(os.path.join(path, file), os.path.join(path, file.replace(project_name, new_name)))
 
     os.rename(path, path.replace(project_name, new_name))
-    os.rename(path, path.replace(project_name+"_PCB", new_name+"_PCB"))
+
+    pcb_path = str(Path(f"Hardware") / Path(project_name+"_PCB"))
+
+    os.rename(pcb_path, pcb_path.replace(project_name+"_PCB", new_name+"_PCB"))
+
+    env_path = Path(os.curdir) / Path(".github") / Path("workflows") / Path("main.yaml")
+
+    file = ""
+    with open(env_path, "r") as txt:
+        file = txt.read()
+
+    varible_declaration = f"KICAD_PROJECT_NAME: "
+
+    kicad_cli_path_index = file.find(varible_declaration) + len(varible_declaration)
+    kicad_cli_path_end_index = file.find("\n", kicad_cli_path_index)
+
+    old_path = file[kicad_cli_path_index:kicad_cli_path_end_index]
+    
+    with open(env_path, "w") as txt:
+        txt.write(file.replace(old_path, f'{new_name}'))
 
     change_var_declaration(project_name, new_name)
+
 
 def set_kicad_cli_path(new_path = "kicad-cli"):
     change_var_declaration(kicad_cli_path, new_path)
@@ -155,7 +174,7 @@ if __name__ == "__main__":
             create_BOM()
 
         case ("rename", new_name):
-            rename_project(new_name, project_name)    
+            rename_project(new_name)    
         case ("change_path", new_path):
             set_kicad_cli_path(new_path)
 
