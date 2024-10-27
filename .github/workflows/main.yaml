@@ -1,9 +1,5 @@
 on: push
 
-env:
-    KICAD_PROJECT_NAME: template
-
-
 jobs:
   kicad_job:
     runs-on: ubuntu-latest
@@ -11,18 +7,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: echo $KICAD_PROJECT_NAME
-      - run: echo Hardware/$KICAD_PROJECT_NAME
 
       - name: Export production files
         id: production
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/$KICAD_PROJECT_NAME/$KICAD_PROJECT_NAME.kicad_sch
+          kicad_sch: Hardware/template/template.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/$KICAD_PROJECT_NAME/$KICAD_PROJECT_NAME.kicad_pcb
+          kicad_pcb: Hardware/template/template.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
             
       # Upload production files only if generation succeeded
@@ -41,7 +35,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/$KICAD_PROJECT_NAME/$KICAD_PROJECT_NAME.kicad_sch
+          kicad_sch: Hardware/template/template.kicad_sch
           sch_erc: true
 
       - name: Run KiCad DRC
@@ -49,7 +43,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/$KICAD_PROJECT_NAME/$KICAD_PROJECT_NAME.kicad_pcb
+          kicad_pcb: Hardware/template/template.kicad_pcb
           pcb_drc: true
 
       # Upload ERC report only if ERC failed
