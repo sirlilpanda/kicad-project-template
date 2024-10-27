@@ -1,11 +1,11 @@
-## yes im "ki"template"
+## yes im "template"
 import sys
 import os
 import subprocess
 from pathlib import Path
 
 kicad_cli_path = "kicad-cli"
-project_name = "ki-template"
+project_name = "template"
 
 if (sys.platform == "darwin"):
     kicad_cli_path = "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
@@ -58,9 +58,8 @@ def change_var_declaration(var_name, new_declaration):
     kicad_cli_path_end_index = file.find("\n", kicad_cli_path_index)
 
     old_path = file[kicad_cli_path_index:kicad_cli_path_end_index]
-    
     with open(__file__, "w") as txt:
-        txt.write(file.replace(old_path, f'"{new_declaration}"', 1))
+        txt.write(file.replace(old_path, f'"{new_declaration}"'))
 
 def rename_project(new_name = "template"):
     """renames the kicad project"""
@@ -74,8 +73,7 @@ def rename_project(new_name = "template"):
     os.rename(path, path.replace(project_name, new_name))
 
     pcb_path = str(Path(f"Hardware") / Path(project_name+"_PCB"))
-
-    os.rename(pcb_path, pcb_path.replace(project_name+"_PCB", new_name+"_PCB"))
+    os.rename(pcb_path, pcb_path.replace(project_name, new_name))
 
     env_path = Path(os.curdir) / Path(".github") / Path("workflows") / Path("main.yaml")
 
@@ -83,21 +81,13 @@ def rename_project(new_name = "template"):
     with open(env_path, "r") as txt:
         file = txt.read()
 
-    varible_declaration = f"KICAD_PROJECT_NAME: "
-
-    kicad_cli_path_index = file.find(varible_declaration) + len(varible_declaration)
-    kicad_cli_path_end_index = file.find("\n", kicad_cli_path_index)
-
-    old_path = file[kicad_cli_path_index:kicad_cli_path_end_index]
-    
     with open(env_path, "w") as txt:
-        txt.write(file.replace(old_path, f'{new_name}'))
+        txt.write(file.replace(f"{project_name}/{project_name}", f"{new_name}/{new_name}"))
 
-    change_var_declaration(project_name, new_name)
-
+    change_var_declaration("project_name", new_name)
 
 def set_kicad_cli_path(new_path = "kicad-cli"):
-    change_var_declaration(kicad_cli_path, new_path)
+    change_var_declaration("kicad_cli_path", new_path)
 
 def create_pdf(output = "_defualt_"):
     if not check_kiCad_exists(): return
