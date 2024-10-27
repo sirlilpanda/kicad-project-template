@@ -693,14 +693,14 @@
 		)
 	)
 	(junction
-		(at 111.76 98.425)
+		(at 132.08 97.155)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a1b00758-fd39-4e9e-83b7-b5eef3d3cd70")
 	)
 	(wire
 		(pts
-			(xy 111.76 98.425) (xy 111.76 93.345)
+			(xy 132.08 97.155) (xy 132.08 92.075)
 		)
 		(stroke
 			(width 0)
@@ -710,7 +710,7 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 93.345) (xy 135.89 99.06)
+			(xy 156.21 92.075) (xy 156.21 97.79)
 		)
 		(stroke
 			(width 0)
@@ -720,7 +720,7 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 93.345) (xy 135.89 93.345)
+			(xy 149.86 92.075) (xy 156.21 92.075)
 		)
 		(stroke
 			(width 0)
@@ -730,7 +730,7 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 114.3) (xy 135.89 114.3)
+			(xy 132.08 113.03) (xy 156.21 113.03)
 		)
 		(stroke
 			(width 0)
@@ -740,7 +740,7 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 108.585) (xy 111.76 114.3)
+			(xy 132.08 107.315) (xy 132.08 113.03)
 		)
 		(stroke
 			(width 0)
@@ -750,7 +750,7 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 93.345) (xy 121.92 93.345)
+			(xy 132.08 92.075) (xy 142.24 92.075)
 		)
 		(stroke
 			(width 0)
@@ -760,7 +760,7 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 114.3) (xy 135.89 106.68)
+			(xy 156.21 113.03) (xy 156.21 105.41)
 		)
 		(stroke
 			(width 0)
@@ -768,8 +768,52 @@
 		)
 		(uuid "ee63b84a-39b7-4f8c-a731-053ceef12018")
 	)
+	(rectangle
+		(start 112.395 80.645)
+		(end 164.465 116.84)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid 01e04360-484f-4a74-9cc5-e294b3e79ea8)
+	)
+	(rectangle
+		(start 167.64 80.645)
+		(end 185.42 116.84)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid 835e5d36-4ab9-4846-bad9-4dde8d368df3)
+	)
+	(text "CIRCUIT"
+		(exclude_from_sim no)
+		(at 116.84 83.185 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "7beea78c-e1ae-4cb0-9067-3975f5e33463")
+	)
+	(text "MOUNTING HOLES"
+		(exclude_from_sim no)
+		(at 176.53 83.185 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "8e0daba1-eada-41e2-b68d-67c5c5b8e97b")
+	)
 	(label "+V"
-		(at 111.76 93.345 0)
+		(at 132.08 92.075 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -780,7 +824,7 @@
 		(uuid "5814bca2-5209-4809-967f-fb7bb1db71b3")
 	)
 	(label "-V"
-		(at 111.76 114.3 180)
+		(at 132.08 113.03 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -792,7 +836,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 125.73 93.345 90)
+		(at 146.05 92.075 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -801,7 +845,7 @@
 		(fields_autoplaced yes)
 		(uuid "00e65238-ae4a-4c7f-8159-9908f75b9fe2")
 		(property "Reference" "R1"
-			(at 125.73 87.63 90)
+			(at 146.05 86.36 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -809,7 +853,7 @@
 			)
 		)
 		(property "Value" "R"
-			(at 125.73 90.17 90)
+			(at 146.05 88.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -817,7 +861,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 125.73 95.123 90)
+			(at 146.05 93.853 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -826,7 +870,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 125.73 93.345 0)
+			(at 146.05 92.075 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -835,7 +879,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 125.73 93.345 0)
+			(at 146.05 92.075 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -860,7 +904,7 @@
 	)
 	(symbol
 		(lib_id "Device:Battery")
-		(at 111.76 103.505 0)
+		(at 132.08 102.235 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -869,7 +913,7 @@
 		(fields_autoplaced yes)
 		(uuid "083ab27c-26d7-42a7-936f-614bf3dbcc3a")
 		(property "Reference" "BT1"
-			(at 115.57 101.6634 0)
+			(at 135.89 100.3934 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -878,7 +922,7 @@
 			)
 		)
 		(property "Value" "Battery"
-			(at 115.57 104.2034 0)
+			(at 135.89 102.9334 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -887,7 +931,7 @@
 			)
 		)
 		(property "Footprint" "Battery:BatteryHolder_LINX_BAT-HLD-012-SMT"
-			(at 111.76 101.981 90)
+			(at 132.08 100.711 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -896,7 +940,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 111.76 101.981 90)
+			(at 132.08 100.711 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -905,7 +949,7 @@
 			)
 		)
 		(property "Description" "Multiple-cell battery"
-			(at 111.76 103.505 0)
+			(at 132.08 102.235 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -930,7 +974,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole")
-		(at 151.765 106.045 0)
+		(at 172.085 104.775 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -939,7 +983,7 @@
 		(fields_autoplaced yes)
 		(uuid "303036eb-ba8a-4bb8-a458-e580349ad373")
 		(property "Reference" "H3"
-			(at 154.305 104.7749 0)
+			(at 174.625 103.5049 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -948,7 +992,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 154.305 107.3149 0)
+			(at 174.625 106.0449 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -958,7 +1002,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
-			(at 151.765 106.045 0)
+			(at 172.085 104.775 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -967,7 +1011,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 151.765 106.045 0)
+			(at 172.085 104.775 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -976,7 +1020,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 151.765 106.045 0)
+			(at 172.085 104.775 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -995,7 +1039,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole")
-		(at 151.765 94.615 0)
+		(at 172.085 93.345 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1004,7 +1048,7 @@
 		(fields_autoplaced yes)
 		(uuid "44b61ab6-c0eb-4ac6-ac05-eaa337721c64")
 		(property "Reference" "H1"
-			(at 154.305 93.3449 0)
+			(at 174.625 92.0749 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1013,7 +1057,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 154.305 95.8849 0)
+			(at 174.625 94.6149 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1023,7 +1067,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
-			(at 151.765 94.615 0)
+			(at 172.085 93.345 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1032,7 +1076,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 151.765 94.615 0)
+			(at 172.085 93.345 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1041,7 +1085,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 151.765 94.615 0)
+			(at 172.085 93.345 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1060,7 +1104,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 111.76 98.425 90)
+		(at 132.08 97.155 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1069,7 +1113,7 @@
 		(fields_autoplaced yes)
 		(uuid "4c5ddf9d-acde-4815-b20d-5d8a5bba6186")
 		(property "Reference" "#FLG01"
-			(at 109.855 98.425 0)
+			(at 130.175 97.155 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1078,7 +1122,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 107.95 98.4249 90)
+			(at 128.27 97.1549 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1087,7 +1131,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 111.76 98.425 0)
+			(at 132.08 97.155 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1096,7 +1140,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 111.76 98.425 0)
+			(at 132.08 97.155 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1105,7 +1149,7 @@
 			)
 		)
 		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 111.76 98.425 0)
+			(at 132.08 97.155 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1127,16 +1171,15 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 135.89 102.87 90)
+		(at 156.21 101.6 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "66005799-571e-41b7-9000-70881f5abb32")
 		(property "Reference" "D1"
-			(at 139.7 103.1874 90)
+			(at 160.02 101.9174 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1145,7 +1188,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 139.7 105.7274 90)
+			(at 160.02 104.4574 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1154,7 +1197,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 135.89 102.87 0)
+			(at 156.21 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1163,7 +1206,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 135.89 102.87 0)
+			(at 156.21 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1172,7 +1215,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 135.89 102.87 0)
+			(at 156.21 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1197,7 +1240,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole")
-		(at 151.765 111.76 0)
+		(at 172.085 110.49 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1206,7 +1249,7 @@
 		(fields_autoplaced yes)
 		(uuid "78111726-4e75-4486-a962-d6983db1e50e")
 		(property "Reference" "H4"
-			(at 154.305 110.4899 0)
+			(at 174.625 109.2199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1215,7 +1258,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 154.305 113.0299 0)
+			(at 174.625 111.7599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1225,7 +1268,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
-			(at 151.765 111.76 0)
+			(at 172.085 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1234,7 +1277,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 151.765 111.76 0)
+			(at 172.085 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1243,7 +1286,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 151.765 111.76 0)
+			(at 172.085 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1262,7 +1305,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole")
-		(at 151.765 100.33 0)
+		(at 172.085 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1271,7 +1314,7 @@
 		(fields_autoplaced yes)
 		(uuid "af56fb7a-5a6a-4c40-9eaa-bb522b9e7a5c")
 		(property "Reference" "H2"
-			(at 154.305 99.0599 0)
+			(at 174.625 97.7899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1280,7 +1323,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 154.305 101.5999 0)
+			(at 174.625 100.3299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1290,7 +1333,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
-			(at 151.765 100.33 0)
+			(at 172.085 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1299,7 +1342,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 151.765 100.33 0)
+			(at 172.085 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1308,7 +1351,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 151.765 100.33 0)
+			(at 172.085 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
