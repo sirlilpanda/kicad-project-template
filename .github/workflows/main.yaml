@@ -26,9 +26,25 @@ jobs:
         with:
           name: Production files
           path: |
-            ${{ github.workspace }}/Hardware_Docs/sch.pdf
-            ${{ github.workspace }}/Hardware_Docs/bom.csv
-            ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
+            ${{ github.workspace }}/sch.pdf
+            ${{ github.workspace }}/bom.csv
+            ${{ github.workspace }}/gbr.zip
+
+      - name: Moving production files to correct location
+        run: |
+            mv ${{ github.workspace }}/sch.pdf ${{ github.workspace }}/Hardware_Docs/sch.pdf
+            mv ${{ github.workspace }}/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
+            mv ${{ github.workspace }}/gbr.zip ${{ github.workspace }}/Hardware/template/template_PCB/gbr.zip
+
+      - name: push production files
+        uses: EndBug/add-and-commit@v9
+        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
+        with:
+          add: .
+          author_name: github action
+          author_email: dont@dont.com
+          commit: "auto updated"
+          push: True
 
       - name: Run KiCad ERC
         id: erc
