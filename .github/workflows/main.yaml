@@ -13,18 +13,18 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/ki_template/ki_template.kicad_sch
+          kicad_sch: Hardware/template/template.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/ki_template/ki_template.kicad_pcb
+          kicad_pcb: Hardware/template/template.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/ki_template/sch.pdf ${{ github.workspace }}/Hardware/ki_template_DOCS/ki_template_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/ki_template/bom.csv ${{ github.workspace }}/Hardware/ki_template_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/ki_template/gbr.zip ${{ github.workspace }}/Hardware/ki_template_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/template/sch.pdf ${{ github.workspace }}/Hardware/template_DOCS/template_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
       - name: commit production files
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
@@ -36,14 +36,14 @@ jobs:
           add: |
             ${{ github.workspace }}/Hardware_Docs/sch.pdf
             ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-            ${{ github.workspace }}/Hardware/ki_template_PCB/gbr.zip
+            ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
 
       - name: Run KiCad ERC
         id: erc
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/ki_template/ki_template.kicad_sch
+          kicad_sch: Hardware/template/template.kicad_sch
           sch_erc: true
 
       - name: Run KiCad DRC
@@ -51,14 +51,14 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/ki_template/ki_template.kicad_pcb
+          kicad_pcb: Hardware/template/template.kicad_pcb
           pcb_drc: true
 
       - name: move DRC and ERC reports
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run:
-            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/ki_template_DOCS/reports/erc.rpt
-            mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/ki_template_DOCS/reports/drc.rpt
+            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+            mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
 
 
       - name: adding reports if failed
@@ -69,5 +69,5 @@ jobs:
             message: 'failed reports'
             push: true
             add: |
-              ${{ github.workspace }}/Hardware/ki_template_DOCS/reports/erc.rpt
-              ${{ github.workspace }}/Hardware/ki_template_DOCS/reports/drc.rpt
+              ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+              ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
