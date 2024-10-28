@@ -41,6 +41,7 @@ jobs:
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         uses: EndBug/add-and-commit@v9
         with:
+          default_author: github_actions
           message: 'Your commit message'
           push: true
           add: |
