@@ -34,9 +34,9 @@ jobs:
           message: 'auto updated'
           push: true
           add: |
-            ${{ github.workspace }}/Hardware_Docs/sch.pdf
-            ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-            ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
+            ${{ github.workspace }}/Hardware/template_DOCS/template_schematic.pdf
+            ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
       - name: Run KiCad ERC
         id: erc
