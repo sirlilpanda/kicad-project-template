@@ -55,11 +55,10 @@ jobs:
           pcb_drc: true
 
       - name: move DRC and ERC reports
-        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
+        if: ${{ failure() && !cancelled() && steps.production.conclusion == 'success' }}
         run:
             mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
             mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
-
 
       - name: adding reports if failed
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
