@@ -93,6 +93,7 @@ where the action can not commit the changes due to not having permissions follow
 3. then scroll down to workflow permissions and ensure that both
     `Read and write permissions` and `Allow GitHub Actions to create and approve pull requests` are ticked as seen below
 ![alt text](res/image-3.png)
+
 this should fix the problem if not, go harass stack overflow they need it
 
 
