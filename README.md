@@ -84,15 +84,15 @@ some common problem may occur when setting up the issues fixes to them are liste
 
 ### permission denied
 if you get an error that looks something long these lines:
-![alt text](image.png)
+![alt text](res/image-4.png)
 where the action can not commit the changes due to not having permissions follow these steps:
 1. open the repo setting
-![alt text](image-1.png)
+![alt text](res/image-1.png)
 2. then head in to actions : General
-![alt text](image-2.png)
+![alt text](res/image-2.png)
 3. then scroll down to workflow permissions and ensure that both
     `Read and write permissions` and `Allow GitHub Actions to create and approve pull requests` are ticked as seen below
-![alt text](image-3.png)
+![alt text](res/image-3.png)
 this should fix the problem if not, go harass stack overflow they need it
 
 
