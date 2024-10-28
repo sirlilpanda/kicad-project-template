@@ -37,7 +37,8 @@ jobs:
         run: mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
 
       - name: Moving grbr files to correct location
-        run: mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template/template_PCB/gbr.zip
+        run: ls ${{ github.workspace }} 
+            # mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template/template_PCB/gbr.zip
 
 
       - name: push production files
