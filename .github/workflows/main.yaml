@@ -34,7 +34,7 @@ jobs:
         run: |
             mv ${{ github.workspace }}/Hardware/template/sch.pdf ${{ github.workspace }}/Hardware_Docs/sch.pdf
             mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-            mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template/template_PCB/gbr.zip
+#            mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template/template_PCB/gbr.zip
 
       - name: push production files
         uses: EndBug/add-and-commit@v9
