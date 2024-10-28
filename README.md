@@ -1,6 +1,6 @@
 # Kicad project template
-
 This is a simple project template for new kicad projects. This template has some basic setup already completed such as workflows for auto creating all the things you forget when creating a kicad project such as:
+
 - gerbers
 - bom
 - schematic pdf
@@ -17,6 +17,8 @@ besides from that the project also has:
     - `red` for +V
     - `blue` for -V
     - `grey` for ground
+
+to create a repo from this template follow this [guide](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
 
 contained in this template are:
 ---
