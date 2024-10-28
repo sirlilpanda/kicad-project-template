@@ -3,7 +3,7 @@ on: push
 jobs:
   kicad_job:
     runs-on: ubuntu-latest
-    name: My KiCad job
+    name: Kicad job
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
         with:
           name: Production files
           path: |
-            ${{ github.workspace }}/sch.pdf
+            ${{ github.workspace }}/Hardware/template/sch.pdf
             ${{ github.workspace }}/bom.csv
             ${{ github.workspace }}/gbr.zip
 
