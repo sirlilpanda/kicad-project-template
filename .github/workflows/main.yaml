@@ -30,25 +30,18 @@ jobs:
             ${{ github.workspace }}/bom.csv
             ${{ github.workspace }}/gbr.zip
 
-      - name: Moving sch pdf file to correct location
+      - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
-        run: mv ${{ github.workspace }}/Hardware/template/sch.pdf ${{ github.workspace }}/Hardware_Docs/sch.pdf
-
-      - name: Moving bom file to correct location
-        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
-        run: mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-
-      - name: Moving grbr files to correct location
-        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
-        run: mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
-
+        run: |  
+            mv ${{ github.workspace }}/Hardware/template/sch.pdf ${{ github.workspace }}/Hardware_Docs/sch.pdf
+            mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
+            mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
 
       - name: push production files
         uses: EndBug/add-and-commit@v9
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         with:
-          author_name: github action
-          author_email: dont@dont.com
+          default_author: github_actions
           commit: "auto updated"
           add: |
             ${{ github.workspace }}/Hardware_Docs/sch.pdf
