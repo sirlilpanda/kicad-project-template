@@ -1,4 +1,6 @@
-on: push
+on: 
+    push:
+        branches: [main, master, workflow_testing]
 
 jobs:
   kicad_job:
@@ -13,48 +15,37 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/template/template.kicad_sch
+          kicad_sch: Hardware/template_PROJECT/template.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/template/template.kicad_pcb
+          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
-            
-      # Upload production files only if generation succeeded
-      - name: Upload production files
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
-        with:
-          name: Production files
-          path: |
-            ${{ github.workspace }}/Hardware/template/sch.pdf
-            ${{ github.workspace }}/bom.csv
-            ${{ github.workspace }}/gbr.zip
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/template/sch.pdf ${{ github.workspace }}/Hardware_Docs/sch.pdf
-            mv ${{ github.workspace }}/Hardware/template/bom.csv ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-            mv ${{ github.workspace }}/Hardware/template/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/template_DOCS/template_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/bom.csv ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
       - name: commit production files
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
-          message: 'auto updated'
+          message: 'auto updated doc'
           push: true
           add: |
-            ${{ github.workspace }}/Hardware_Docs/sch.pdf
-            ${{ github.workspace }}/Hardware_Docs/BOM/bom.csv
-            ${{ github.workspace }}/Hardware/template_PCB/gbr.zip
+            ${{ github.workspace }}/Hardware/template_DOCS/template_schematic.pdf
+            ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
       - name: Run KiCad ERC
         id: erc
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/template/template.kicad_sch
+          kicad_sch: Hardware/template_PROJECT/template.kicad_sch
           sch_erc: true
 
       - name: Run KiCad DRC
@@ -62,21 +53,22 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/template/template.kicad_pcb
+          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
           pcb_drc: true
 
-      # Upload ERC report only if ERC failed
-      - name: Upload ERC report
-        uses: actions/upload-artifact@v4
-        if: ${{ failure() && steps.erc.conclusion == 'failure' }}
-        with:
-          name: erc.rpt
-          path: ${{ github.workspace }}/erc.rpt
+      - name: move DRC and ERC reports
+        if: ${{ failure() && !cancelled() && steps.production.conclusion == 'success' }}
+        run:
+            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+            mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
 
-      # Upload DRC report only if DRC failed
-      - name: Upload DRC report
-        uses: actions/upload-artifact@v4
-        if: ${{ failure() && steps.drc.conclusion == 'failure' }}
+      - name: adding reports if failed
+        if: ${{ failure() && steps.erc.conclusion == 'failure' }}
+        uses: EndBug/add-and-commit@v9
         with:
-          name: drc.rpt
-          path: ${{ github.workspace }}/drc.rpt
+            default_author: github_actions
+            message: 'failed reports'
+            push: true
+            add: |
+              ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+              ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt

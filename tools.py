@@ -4,9 +4,12 @@ import os
 import subprocess
 from pathlib import Path
 
+# i didnt want these in another file
+# so it self modifies these values to store them
 kicad_cli_path = "kicad-cli"
 project_name = "template"
 
+# i know the kicad-cli is not in path on a mac
 if (sys.platform == "darwin"):
     kicad_cli_path = "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
 
@@ -16,6 +19,7 @@ this is a python script that is a thin wrapper around kicad-cli as well as some 
 usage: python tools.py {command} {command_args}
 
 commands:
+    ["help" | "-h" | "--h" |"--help"]: shows this message
 
     rename: this renames the kicad project
         python tools.py rename {project_name}
@@ -34,7 +38,7 @@ commands:
         
 """
 
-def check_kiCad_exists(kicad_cli_name : str = "kicad-cli") -> bool:
+def check_kiCad_CLI_exists(kicad_cli_name : str = "kicad-cli") -> bool:
     try:
         subprocess.run(f"{kicad_cli_name}", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return True;
@@ -63,7 +67,7 @@ def change_var_declaration(var_name, new_declaration):
 
 def rename_project(new_name = "template"):
     """renames the kicad project"""
-    path = str(Path(f"Hardware/{project_name}"))
+    path = str(Path(f"Hardware") / Path(project_name+"_PROJECT"))
     files = os.listdir(path)
 
     for index, file in enumerate(files):
@@ -75,6 +79,9 @@ def rename_project(new_name = "template"):
     pcb_path = str(Path(f"Hardware") / Path(project_name+"_PCB"))
     os.rename(pcb_path, pcb_path.replace(project_name, new_name))
 
+    doc_path = str(Path(f"Hardware") / Path(project_name+"_DOCS"))
+    os.rename(doc_path, doc_path.replace(project_name, new_name))
+
     env_path = Path(os.curdir) / Path(".github") / Path("workflows") / Path("main.yaml")
 
     file = ""
@@ -82,7 +89,7 @@ def rename_project(new_name = "template"):
         file = txt.read()
 
     with open(env_path, "w") as txt:
-        txt.write(file.replace(f"{project_name}/{project_name}", f"{new_name}/{new_name}"))
+        txt.write(file.replace(f"/{project_name}", f"/{new_name}"))
 
     change_var_declaration("project_name", new_name)
 
@@ -90,7 +97,7 @@ def set_kicad_cli_path(new_path = "kicad-cli"):
     change_var_declaration("kicad_cli_path", new_path)
 
 def create_pdf(output = "_defualt_"):
-    if not check_kiCad_exists(): return
+    if not check_kiCad_CLI_exists(): return
         
     main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_sch")
     output_path = Path(os.curdir) / Path("Hardware_Docs") / Path(output + ".pdf")
@@ -106,7 +113,7 @@ def create_pdf(output = "_defualt_"):
         print("\n"+ "="*20)
 
 def create_PCB(output_path_name = "_defualt_"):
-    if not check_kiCad_exists(): return
+    if not check_kiCad_CLI_exists(): return
         
     pcb_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_pcb")
     output_path = Path(os.curdir) / Path("Hardware") / Path(output_path_name)
@@ -131,7 +138,7 @@ def create_PCB(output_path_name = "_defualt_"):
         print("\n"+ "="*20)
 
 def create_BOM(output = "_defualt_"):
-    if not check_kiCad_exists(): return
+    if not check_kiCad_CLI_exists(): return
     main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_sch")
     output_path = Path(os.curdir) / Path("Hardware_Docs") / Path("BOM") / Path(output + ".csv")
 
@@ -145,7 +152,7 @@ def create_BOM(output = "_defualt_"):
         print(string)
         print("\n"+ "="*20)
 
-
+# i should really write some unit test type deal for this
 if __name__ == "__main__":
     match sys.argv[1:]:
         case ("pdf", name):
@@ -168,6 +175,9 @@ if __name__ == "__main__":
         case ("change_path", new_path):
             set_kicad_cli_path(new_path)
 
+        case ("help" | "-h" | "--h" |"--help" , ):
+            print(help_message)
+
         case (unknown_command):
             if (len(unknown_command)):
                 print("unknown command got : " + " ".join(unknown_command))
@@ -175,6 +185,6 @@ if __name__ == "__main__":
                 print("got not command line args")
             print(help_message)
 
-    # print(check_kiCad_exists("k"));
+    # print(check_kiCad_CLI_exists("k"));
 
 
