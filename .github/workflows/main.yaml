@@ -68,7 +68,7 @@ jobs:
       - name: where is this report
         if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
         run:
-            ls /Hardware/template_PROJECT/
+            ls ${{ github.workspace }}/Hardware/template_PROJECT/
 
       - name: adding ERC report
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
