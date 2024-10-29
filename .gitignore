@@ -27,3 +27,5 @@ Hardware/*/*.ses
 # Exported BOM files
 Hardware/*/*.xml
 Hardware/*/*.csv
+
+__pycache__/
