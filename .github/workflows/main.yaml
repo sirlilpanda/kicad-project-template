@@ -65,7 +65,11 @@ jobs:
         if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
         run:
             mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
-      
+      - name: where is this report
+        if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
+        run:
+            ls   
+
       - name: adding ERC report
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
         uses: EndBug/add-and-commit@v9
