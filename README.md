@@ -1,5 +1,6 @@
 # Kicad project template
 [![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
+
 This is a simple project template for new kicad projects. This template has some basic setup already completed such as workflows for auto creating all the things you forget when creating a kicad project such as:
 
 - gerbers
