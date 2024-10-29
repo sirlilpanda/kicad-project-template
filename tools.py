@@ -144,7 +144,7 @@ def create_BOM(output = "_defualt_"):
     output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path("BOM") / Path(output + ".csv")
 
     if output == "_defualt_":
-        output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path("BOM") / Path(project_name + ".csv")
+        output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path("BOM") / Path("bill_of_materials.csv")
 
     exit_code, string = subprocess.getstatusoutput(f"{kicad_cli_path} sch export bom -o {output_path} {main_sch_path}")
 
