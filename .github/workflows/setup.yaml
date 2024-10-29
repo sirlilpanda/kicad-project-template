@@ -16,10 +16,10 @@ jobs:
                 python-version: '3.10'
                 
             - name: check if setup has been completed
-              if: 'test -f ${{ github.workspace }}/.github/workflows/.setup_complete'
+              if: 'test -f ${{ github.workspace }}/.github/.setup_complete'
               run: |
-                python ${{ github.workspace }}/tools.py ${{github.event.repository.name}}
-                touch ${{ github.workspace }}/.github/workflows/.setup_complete
+                python ${{ github.workspace }}/tools.py rename ${{github.event.repository.name}}
+                touch ${{ github.workspace }}/.github/.setup_complete
             
             - name: update repo
               uses: EndBug/add-and-commit@v9
