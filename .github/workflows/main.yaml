@@ -59,16 +59,12 @@ jobs:
       - name: move DRC report
         if: ${{ steps.drc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
         run:
-            mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
 
       - name: move ERC report
         if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
         run:
-            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
-      - name: where is this report
-        if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
-        run:
-            ls ${{ github.workspace }}/Hardware/template_PROJECT/
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
 
       - name: adding ERC report
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
