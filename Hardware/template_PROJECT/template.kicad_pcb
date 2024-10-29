@@ -153,7 +153,7 @@
 		(descr "LED SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D1"
-			(at -3.023587 0.028661 270)
+			(at -3.023587 0.028661 -90)
 			(layer "F.SilkS")
 			(uuid "1decbab8-10fc-4fbf-be47-c634a49fc12b")
 			(effects
@@ -164,7 +164,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 0 1.65 270)
+			(at 0 1.65 -90)
 			(layer "F.Fab")
 			(uuid "1a61e433-bbb3-4793-a6cf-303a7d6b74f0")
 			(effects
@@ -336,7 +336,7 @@
 			(uuid "a82206b5-bc67-4f89-a9a6-d6ca790b346c")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 270)
+			(at 0 0 -90)
 			(layer "F.Fab")
 			(uuid "9e958dba-c59c-433a-a40e-5351be43da83")
 			(effects
@@ -609,7 +609,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R1"
-			(at 3 0.0875 270)
+			(at 3 0.0875 -90)
 			(layer "F.SilkS")
 			(uuid "9ac292d4-8166-4592-b12c-69c58b8717f4")
 			(effects
@@ -620,7 +620,7 @@
 			)
 		)
 		(property "Value" "R"
-			(at -3 -0.0875 270)
+			(at -3 -0.0875 -90)
 			(layer "F.Fab")
 			(uuid "179fae2d-bf5b-4046-83ee-7ad4656e56f2")
 			(effects
@@ -772,7 +772,7 @@
 			(uuid "2558a820-9e52-494f-92ca-41292124bf45")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 270)
+			(at 0 0 -90)
 			(layer "F.Fab")
 			(uuid "578b6437-9264-4857-a881-03976a0db2e4")
 			(effects
@@ -1793,6 +1793,18 @@
 		)
 		(layer "Edge.Cuts")
 		(uuid "d0b62f1b-7aa9-4bd8-9e09-d4beeb7cfb9c")
+	)
+	(gr_text "Battery test board"
+		(at 135.8 91.4 0)
+		(layer "F.SilkS")
+		(uuid "14b4e536-78be-4e48-a42b-df9a02c5614b")
+		(effects
+			(font
+				(size 1.2 0.7)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
 	)
 	(gr_text "TEST_BOARD DELETE"
 		(at 133.4 83.4 0)

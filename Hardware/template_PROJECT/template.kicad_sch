@@ -769,7 +769,7 @@
 		(uuid "ee63b84a-39b7-4f8c-a731-053ceef12018")
 	)
 	(rectangle
-		(start 112.395 80.645)
+		(start 127.635 80.645)
 		(end 164.465 116.84)
 		(stroke
 			(width 0)
@@ -794,7 +794,7 @@
 	)
 	(text "CIRCUIT"
 		(exclude_from_sim no)
-		(at 116.84 83.185 0)
+		(at 135.255 83.185 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -977,7 +977,7 @@
 		(at 172.085 104.775 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -1042,7 +1042,7 @@
 		(at 172.085 93.345 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -1104,7 +1104,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 132.08 97.155 90)
+		(at 132.08 97.155 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1113,7 +1113,7 @@
 		(fields_autoplaced yes)
 		(uuid "4c5ddf9d-acde-4815-b20d-5d8a5bba6186")
 		(property "Reference" "#FLG01"
-			(at 130.175 97.155 0)
+			(at 133.985 97.155 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1122,7 +1122,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 128.27 97.1549 90)
+			(at 135.89 97.1549 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1243,7 +1243,7 @@
 		(at 172.085 110.49 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -1304,11 +1304,79 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 155.575 64.77 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "950e05d4-48bc-4357-83e2-729c726d779c")
+		(property "Reference" "R2"
+			(at 155.575 59.055 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "R"
+			(at 155.575 61.595 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 155.575 66.548 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 155.575 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 155.575 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "059afe97-8dfb-4ae5-8317-83faa81dc68a")
+		)
+		(pin "2"
+			(uuid "e243ae42-55f7-4249-8dfa-e84a7bce9be0")
+		)
+		(instances
+			(project "template"
+				(path "/92a86815-0425-4ac3-80bb-037195814139"
+					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Mechanical:MountingHole")
 		(at 172.085 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
