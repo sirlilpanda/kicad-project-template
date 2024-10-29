@@ -1,8 +1,11 @@
-on:
-    create:
+name: setup repo
+on:   
+    repository_dispatch:
+        types: [on_scaffold_repo]
 
 jobs:
     setup_job:
+        if: github.ref == 'refs/heads/main' && github.event.client_payload.scaffold_type == 'setup'
         runs-on: ubuntu-latest
         name: setup
         steps:
