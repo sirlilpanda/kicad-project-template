@@ -56,19 +56,32 @@ jobs:
           kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
           pcb_drc: true
 
-      - name: move DRC and ERC reports
-        if: ${{ failure() && !cancelled() && steps.production.conclusion == 'success' }}
+      - name: move DRC report
+        if: ${{ steps.drc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
         run:
-            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
             mv ${{ github.workspace }}/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
 
-      - name: adding reports if failed
+      - name: move ERC report
+        if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
+        run:
+            mv ${{ github.workspace }}/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+      
+      - name: adding ERC report
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
         uses: EndBug/add-and-commit@v9
         with:
             default_author: github_actions
-            message: 'failed reports'
+            message: 'failed ERC report'
             push: true
             add: |
-              ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+                ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+
+      - name: adding DRC report
+        if: ${{ failure() && steps.drc.conclusion == 'failure' }}
+        uses: EndBug/add-and-commit@v9
+        with:
+            default_author: github_actions
+            message: 'failed DRC report'
+            push: true
+            add: |
               ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
