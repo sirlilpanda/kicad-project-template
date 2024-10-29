@@ -1,5 +1,5 @@
 on:
-    create
+    create:
 
 jobs:
     setup_job:
