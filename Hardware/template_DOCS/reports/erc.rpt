@@ -1,1 +1,11 @@
-OK
+ERC report (2024-10-29T05:32:39+0000, Encoding UTF8)
+
+***** Sheet /
+[pin_not_connected]: Pin not connected
+    ; error
+    @(151.7650 mm, 64.7700 mm): Symbol R2 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(159.3850 mm, 64.7700 mm): Symbol R2 Pin 2 [Passive, Line]
+
+ ** ERC messages: 2  Errors 2  Warnings 0
