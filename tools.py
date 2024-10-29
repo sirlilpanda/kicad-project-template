@@ -99,11 +99,11 @@ def set_kicad_cli_path(new_path = "kicad-cli"):
 def create_pdf(output = "_defualt_"):
     if not check_kiCad_CLI_exists(): return
         
-    main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_sch")
-    output_path = Path(os.curdir) / Path("Hardware_Docs") / Path(output + ".pdf")
+    main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_PROJECT") / Path(project_name + ".kicad_sch")
+    output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path(output + ".pdf")
 
     if output == "_defualt_":
-        output_path = Path(os.curdir) / Path("Hardware_Docs") / Path(project_name + ".pdf")
+        output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path(project_name + ".pdf")
 
     exit_code, string = subprocess.getstatusoutput(f"{kicad_cli_path} sch export pdf -o {output_path} {main_sch_path}")
 
@@ -115,7 +115,7 @@ def create_pdf(output = "_defualt_"):
 def create_PCB(output_path_name = "_defualt_"):
     if not check_kiCad_CLI_exists(): return
         
-    pcb_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_pcb")
+    pcb_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_PROJECT") / Path(project_name + ".kicad_pcb")
     output_path = Path(os.curdir) / Path("Hardware") / Path(output_path_name)
 
     if output_path_name == "_defualt_":
@@ -139,16 +139,17 @@ def create_PCB(output_path_name = "_defualt_"):
 
 def create_BOM(output = "_defualt_"):
     if not check_kiCad_CLI_exists(): return
-    main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name) / Path(project_name + ".kicad_sch")
-    output_path = Path(os.curdir) / Path("Hardware_Docs") / Path("BOM") / Path(output + ".csv")
+    main_sch_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_PROJECT") / Path(project_name + ".kicad_sch")
+    print(main_sch_path)
+    output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path("BOM") / Path(output + ".csv")
 
     if output == "_defualt_":
-        output_path = Path(os.curdir) / Path("Hardware_Docs") / Path("BOM") / Path(project_name + ".csv")
+        output_path = Path(os.curdir) / Path("Hardware") / Path(project_name + "_DOCS") / Path("BOM") / Path(project_name + ".csv")
 
     exit_code, string = subprocess.getstatusoutput(f"{kicad_cli_path} sch export bom -o {output_path} {main_sch_path}")
 
     if exit_code > 0:
-        print("[ERROR] could not create pdf got error:\n" + "="*20)
+        print("[ERROR] could not create BOM got error:\n" + "="*20)
         print(string)
         print("\n"+ "="*20)
 
