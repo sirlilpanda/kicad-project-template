@@ -5,7 +5,7 @@ on:
 jobs:
   kicad_job:
     runs-on: ubuntu-latest
-    name: Kicad job
+    name: creating BOM schematic pdf and grbrs 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +40,21 @@ jobs:
             ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
             ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
+  rules_check_check:
+    runs-on: ubuntu-latest
+    name: drc reports
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Run KiCad DRC
+        id: drc
+        uses: sparkengineering/kicad-action@v3
+        if: '!cancelled()'
+        with:
+          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
+          pcb_drc: true
+      
       - name: Run KiCad ERC
         id: erc
         uses: sparkengineering/kicad-action@v3
@@ -48,46 +63,35 @@ jobs:
           kicad_sch: Hardware/template_PROJECT/template.kicad_sch
           sch_erc: true
 
-      - name: Run KiCad DRC
-        id: drc
-        uses: sparkengineering/kicad-action@v3
-        if: '!cancelled()'
-        with:
-          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
-          pcb_drc: true
-
       - name: move DRC report
-        if: ${{ steps.drc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
+        if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
+          mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
 
       - name: move ERC report
-        if: ${{ steps.erc.conclusion == 'failure' && !cancelled() && steps.production.conclusion == 'success' }}
+        if: '!cancelled()'
         run:
             mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
 
-
       - name: Setting up Python and chevron to processes failed reports
-        if: ${{ failure() }}
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
           # if this doesnt work i will just install chevron itself
       - name: installing requirements  
-        if: ${{ failure() }}
         run: pip install -r ${{ github.workspace }}/.github/requirements.txt
-        
+
       - name: creating ERC report in markdown
-        if: ${{ failure() && steps.erc.conclusion == 'failure' }} 
+        if: ${{ steps.erc.conclusion == 'failure' }} 
         run: python ${{ github.workspace }}/.github/process_rpt_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt ${{ github.workspace }}/.github/rules_check_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
       
       - name: creating DRC report in markdown
-        if: ${{ failure() && steps.drc.conclusion == 'failure' }} 
+        if: ${{ steps.drc.conclusion == 'failure' }} 
         run: python ${{ github.workspace }}/.github/process_rpt_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt ${{ github.workspace }}/.github/rules_check_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
-
+  
       - name: adding ERC report
-        if: ${{ failure() && steps.erc.conclusion == 'failure' }}
+        if: ${{ steps.erc.conclusion == 'failure' }}
         uses: EndBug/add-and-commit@v9
         with:
             default_author: github_actions
@@ -96,9 +100,9 @@ jobs:
             add: |
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
-
+  
       - name: adding DRC report
-        if: ${{ failure() && steps.drc.conclusion == 'failure' }}
+        if: ${{ steps.drc.conclusion == 'failure' }}
         uses: EndBug/add-and-commit@v9
         with:
             default_author: github_actions
