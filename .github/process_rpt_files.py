@@ -98,9 +98,9 @@ def load_report(filename : str) -> ReportHash:
     time_created : datetime = None
     report_string : str = ""
     with open(filename, "r") as rpt:
-        header = rpt.readline().strip()
-        time_format_string = header[12:].split(",")[0]
-        time_created = datetime.datetime.fromisoformat(time_format_string)
+        # header = rpt.readline().strip()
+        # time_format_string = header[12:].split(",")[0]
+        time_created = datetime.datetime.now()
         report_string = rpt.read()
 
     report_string_lines = report_string.splitlines() 
