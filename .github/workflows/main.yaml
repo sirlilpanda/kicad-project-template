@@ -91,6 +91,7 @@ jobs:
             push: true
             add: |
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+                ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
 
       - name: adding DRC report
         if: ${{ failure() && steps.drc.conclusion == 'failure' }}
