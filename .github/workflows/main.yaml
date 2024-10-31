@@ -81,9 +81,9 @@ jobs:
       - name: creating ERC report in markdown
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
         run: python ${{ github.workspace }}/.github/process_rpt_files.py \
-            ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt \
-            ${{ github.workspace }}/.github/rules_check_report_template.mustache \
-            ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
+         ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt \
+         ${{ github.workspace }}/.github/rules_check_report_template.mustache \
+         ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
 
       - name: adding ERC report
         if: ${{ failure() && steps.erc.conclusion == 'failure' }}
