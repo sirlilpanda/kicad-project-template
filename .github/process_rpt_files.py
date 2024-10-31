@@ -1,5 +1,5 @@
 # usage: python process_rpt_files.py report.rpt template.mustache outfile.md
-
+# so this was useless
 import chevron 
 import sys
 import datetime
