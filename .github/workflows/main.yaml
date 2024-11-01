@@ -80,12 +80,14 @@ jobs:
             mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.json ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json
 
       - name: Setting up Python and chevron to processes failed reports
+        if: ${{ !cancelled() }} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
           # if this doesnt work i will just install chevron itself
       - name: installing requirements  
+        if: ${{ !cancelled() }} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: creating ERC report in markdown
