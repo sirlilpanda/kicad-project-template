@@ -3,7 +3,43 @@ on:
         branches: [main, master, workflow_testing]
 
 jobs:
+  setup_job:
+    runs-on: ubuntu-latest
+    name: set up project 
+    steps:
+      - name: read-yaml-file
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        id: read_action_js
+        with:
+          config: ${{ github.workspace }}/.project_settings.yaml
+      
+      - name: Setting up Python and chevron to processes failed reports
+        # workflows really need some more work done on them
+        if: github.repository != 'sirlilpanda/kicad-project-template' && ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
+      
+      - name: installing requirements  
+        if: github.repository != 'sirlilpanda/kicad-project-template' && ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
+      
+      - name: rename project if setup has not been completed
+        if: github.repository != 'sirlilpanda/kicad-project-template' && ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} > ${{ github.workspace }}/.project_settings.yaml 
+
+      - name: commit production files
+        if: github.repository != 'sirlilpanda/kicad-project-template' && ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: 'setup project'
+          push: true
+          add: "."
+
   kicad_job:
+    needs: setup_job
     runs-on: ubuntu-latest
     name: creating BOM schematic pdf and grbrs 
     steps:
