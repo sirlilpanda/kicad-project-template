@@ -70,11 +70,11 @@ jobs:
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: creating ERC report in markdown
-        if: ${{ steps.erc.conclusion == 'failure' && !cancelled() }} 
+        if: ${{ !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json ${{ github.workspace }}/.github/report_templates/erc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
       
       - name: creating DRC report in markdown
-        if: ${{ steps.drc.conclusion == 'failure' && !cancelled() }} 
+        if: ${{ && !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json ${{ github.workspace }}/.github/report_templates/drc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
   
       - name: commit production files
