@@ -17,7 +17,7 @@ def load_report(filename : str) -> dict:
             out_dict = process_drc_json.process_report(js.read())
 
     out_dict.setdefault("time", str(datetime.datetime.now().time()))
-    out_dict.setdefault("date", str(datetime.datetime.now().date()))
+    out_dict.setdefault("date", str(datetime.datetime.now().date().strftime("%d-%m-%Y")))
 
     return out_dict
 
