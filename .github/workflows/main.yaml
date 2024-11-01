@@ -9,7 +9,8 @@ jobs:
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
     steps:
       - name: is their a dir here
-        run: echo "why is nothing running"
+        run: ls ${{ github.workspace }}
+
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
