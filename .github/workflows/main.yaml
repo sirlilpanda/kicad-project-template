@@ -86,7 +86,7 @@ jobs:
             cache: 'pip'
           # if this doesnt work i will just install chevron itself
       - name: installing requirements  
-        run: pip install -r ${{ github.workspace }}/.github/requirements.txt
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: creating ERC report in markdown
         if: ${{ steps.erc.conclusion == 'failure' && !cancelled() }} 
