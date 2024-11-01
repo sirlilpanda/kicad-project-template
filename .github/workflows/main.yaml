@@ -10,9 +10,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: is their a dir here
-        run: ls ${{ github.workspace }}
 
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
@@ -52,30 +49,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: read-yaml-file
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        id: read_action_js
+        with:
+          config: ${{ github.workspace }}/project_settings.yaml
+
       - name: Export production files
         id: production
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/template_PROJECT/template.kicad_sch
+          kicad_sch: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
+          kicad_pcb: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/template_DOCS/template_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/bom.csv ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
 
       - name: Run KiCad DRC
         id: drc
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
+          kicad_pcb: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
@@ -85,7 +88,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/template_PROJECT/template.kicad_sch
+          kicad_sch: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json
@@ -93,12 +96,12 @@ jobs:
       - name: move DRC report
         if: '!cancelled()'
         run:
-          mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.json ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json
+          mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json
 
       - name: move ERC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.json ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json
+            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.json
 
       - name: Setting up Python and chevron to processes failed reports
         if: ${{ !cancelled() }} 
@@ -113,15 +116,15 @@ jobs:
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/.github/report_templates/bom_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/BOM/bom_report.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/${{steps.read_action_js.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bom_report.md
       
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json ${{ github.workspace }}/.github/report_templates/erc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.read_action_js.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json ${{ github.workspace }}/.github/report_templates/drc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.read_action_js.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
   
       - name: commit production files
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
