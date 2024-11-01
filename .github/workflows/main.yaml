@@ -48,7 +48,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+      - name: adding rules check reports
+        uses: EndBug/add-and-commit@v9
+        with:
+          push: false
+          pull: "--rebase"
+  
       - name: Run KiCad DRC
         id: drc
         uses: sparkengineering/kicad-action@v3
