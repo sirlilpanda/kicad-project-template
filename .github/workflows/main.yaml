@@ -8,6 +8,8 @@ jobs:
     name: set up project 
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
     steps:
+      - name: is their a dir here
+        run: ls ${{ github.workspace }}
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
