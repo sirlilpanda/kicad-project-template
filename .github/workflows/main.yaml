@@ -40,6 +40,7 @@ jobs:
             ${{ github.workspace }}/Hardware/template_DOCS/BOM/bill_of_materials.csv
             ${{ github.workspace }}/Hardware/template_PCB/grbr.zip
 
+  # on fail it should upload the json as well
   rules_check_check:
     runs-on: ubuntu-latest
     name: drc reports
@@ -54,6 +55,7 @@ jobs:
         with:
           kicad_pcb: Hardware/template_PROJECT/template.kicad_pcb
           pcb_drc: true
+          report_format: json
       
       - name: Run KiCad ERC
         id: erc
@@ -62,16 +64,17 @@ jobs:
         with:
           kicad_sch: Hardware/template_PROJECT/template.kicad_sch
           sch_erc: true
+          report_format: json
 
       - name: move DRC report
         if: '!cancelled()'
         run:
-          mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
+          mv ${{ github.workspace }}/Hardware/template_PROJECT/drc.json ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json
 
       - name: move ERC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.rpt ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+            mv ${{ github.workspace }}/Hardware/template_PROJECT/erc.json ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json
 
       - name: Setting up Python and chevron to processes failed reports
         uses: actions/setup-python@v5 
@@ -84,11 +87,11 @@ jobs:
 
       - name: creating ERC report in markdown
         if: ${{ steps.erc.conclusion == 'failure' }} 
-        run: python ${{ github.workspace }}/.github/process_rpt_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt ${{ github.workspace }}/.github/rules_check_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
+        run: python ${{ github.workspace }}/.github/process_json_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json ${{ github.workspace }}/.github/report_templates/erc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
       
       - name: creating DRC report in markdown
         if: ${{ steps.drc.conclusion == 'failure' }} 
-        run: python ${{ github.workspace }}/.github/process_rpt_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt ${{ github.workspace }}/.github/rules_check_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/process_json_files.py ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json ${{ github.workspace }}/.github/report_templates/drc_report_template.mustache ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
   
       - name: adding ERC report
         if: ${{ steps.erc.conclusion == 'failure' }}
@@ -98,7 +101,7 @@ jobs:
             message: 'failed ERC report'
             push: true
             add: |
-                ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.rpt
+                ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
   
       - name: adding DRC report
@@ -109,5 +112,5 @@ jobs:
             message: 'failed DRC report'
             push: true
             add: |
-                ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.rpt
+                ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
