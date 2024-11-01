@@ -1,6 +1,6 @@
 # BOM for bill_of_material
 
-report created at 09:23:52.579850 on 01-11-2024.
+report created at 09:25:33.033471 on 01-11-2024.
 
 bill_of_material has a total of 3 parts with a cost of $0.
 
