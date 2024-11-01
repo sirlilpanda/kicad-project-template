@@ -2,7 +2,7 @@ has_been_set_up: false
 
 # the name of the project and more than likely the name of the repo
 project_name:
-    ki_template
+    template
 
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
