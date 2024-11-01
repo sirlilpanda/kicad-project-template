@@ -1,0 +1,70 @@
+# DRC report
+
+report created at {{time}} on {{date}}.
+
+the desgin rule check found:
+- {{total_errors}} errors in your design
+- {{total_warns}} warns in your design
+
+number of errors and warns breakdown per sheet:
+| error             | number of errors                       | number of warns                       |
+| ----------------- | -------------------------------------- | ------------------------------------- | 
+| violations        | {{violations.number_of_errors}}        | {{violations.number_of_warns}}        | 
+| unconnected items | {{unconnected_items.number_of_errors}} | {{unconnected_items.number_of_warns}} | 
+| schematic parity  | {{schematic_parity.number_of_errors}}  | {{schematic_parity.number_of_warns}}  |
+| total             |  {{total_errors}}                      | {{total_warns}}                       |
+
+below is a more indepth breakdown of the errors and warns per error type.
+note you should only use this for quickly checking that the project
+you uploaded has no error or warn. YOU SHOULD *NOT* use this to acutally
+run the drc in kicad so you can see where is erroring.
+
+
+# violations
+
+## errors : {{violations.number_of_errors}}
+{{#violations.errors}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/violations.errors}}
+
+## warns : {{violations.number_of_warns}}
+{{#violations.warns}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/violations.warns}}
+
+# unconnected items
+
+## errors : {{unconnected_items.number_of_errors}}
+{{#unconnected_items.errors}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/unconnected_items.errors}}
+
+## warns : {{unconnected_items.number_of_warns}}
+{{#unconnected_items.warns}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/unconnected_items.warns}}
+
+# schematic parity
+
+## errors : {{schematic_parity.number_of_errors}}
+{{#schematic_parity.errors}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/schematic_parity.errors}}
+
+## warns : {{schematic_parity.number_of_warns}}
+{{#schematic_parity.warns}}
+### {{name}}
+{{content}}
+{{loction}}
+{{/schematic_parity.warns}}
+
