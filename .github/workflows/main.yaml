@@ -48,11 +48,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: adding rules check reports
-        uses: EndBug/add-and-commit@v9
-        with:
-          push: false
-          pull: "--rebase"
   
       - name: Run KiCad DRC
         id: drc
@@ -107,4 +102,12 @@ jobs:
         with:
             default_author: github_actions
             message: 'failed RC report/s'
+            push: false
+            pull: ''
+
+      - name: adding rules check reports
+        if: ${{ steps.erc.conclusion == 'failure' || steps.drc.conclusion == 'failure' && !cancelled() }}
+        uses: EndBug/add-and-commit@v9
+        with:
+            default_author: github_actions
             push: true
