@@ -25,6 +25,7 @@ def main():
     with open(Path("project_settings.yaml"), "r") as yaml_file:
         settings = yaml.load(yaml_file)
         
+    print("{settings['project_name']=}", file = sys.stderr)
     rename_project(settings["project_name"], sys.argv[1])
     settings["project_name"] = sys.argv[1]
     settings["has_been_set_up"] = True
