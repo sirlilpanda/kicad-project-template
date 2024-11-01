@@ -1,4 +1,4 @@
-# usage: python process_rpt_files.py report.rpt template.mustache outfile.md
+# usage: python process_json_reports.py report.json template.mustache outfile.md
 import chevron 
 import sys
 import datetime

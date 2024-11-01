@@ -6,8 +6,8 @@ class Violation:
         self.content : str = ""
 
         # this violation_report_type purely exists because of a bug
-        # in kicads json output format
-
+        # in kicads json output format where json output on erc reports
+        # the position in decimeters
         for item in violation["items"]:
             item_string = item["description"]
             x : float = float(item["pos"]["x"]) * (100.0 if (violation_report_type == "erc") else 1.0)
