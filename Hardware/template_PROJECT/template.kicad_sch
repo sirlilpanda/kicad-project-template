@@ -693,12 +693,6 @@
 		)
 	)
 	(junction
-		(at 156.21 113.03)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "6149af2b-5b30-413c-9832-8dc32ba63e9b")
-	)
-	(junction
 		(at 132.08 97.155)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1369,74 +1363,6 @@
 			(project "template"
 				(path "/92a86815-0425-4ac3-80bb-037195814139"
 					(reference "H2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 160.02 113.03 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d0a2b522-7066-4cef-9bc3-429683d12828")
-		(property "Reference" "R2"
-			(at 160.02 107.315 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "R"
-			(at 160.02 109.855 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 160.02 114.808 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 160.02 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 160.02 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5fc66dcb-5d76-4f88-abb3-b35d46a9d80a")
-		)
-		(pin "2"
-			(uuid "19301fb4-b6a2-4dab-8fab-b0936e90e3d1")
-		)
-		(instances
-			(project "template"
-				(path "/92a86815-0425-4ac3-80bb-037195814139"
-					(reference "R2")
 					(unit 1)
 				)
 			)
