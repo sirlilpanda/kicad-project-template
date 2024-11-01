@@ -32,7 +32,8 @@ def main():
     settings["has_been_set_up"] = True
     # have to just print it out a rewrite over .project_settings because this guy
     # is dumb and doesnt just let you write these out to string
-    yaml.dump(settings, sys.stdout)
+    with open(Path("project_settings.yaml"), "w", encoding=("utf-8")) as file:
+        yaml.dump(settings, file)     
 
 
 if __name__ == "__main__":
