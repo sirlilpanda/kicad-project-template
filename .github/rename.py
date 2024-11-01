@@ -21,6 +21,7 @@ def rename_project(project_name, new_name = "template"):
     os.rename(doc_path, doc_path.replace(project_name, new_name))
 
 def main():
+    print(f"{os.curdir}")
     yaml : YAML = YAML() 
     with open(Path("../project_settings.yaml"), "r") as yaml_file:
         settings = yaml.load(yaml_file)
