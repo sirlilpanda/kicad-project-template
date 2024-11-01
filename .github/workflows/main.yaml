@@ -8,6 +8,9 @@ jobs:
     name: set up project 
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: is their a dir here
         run: ls ${{ github.workspace }}
 
