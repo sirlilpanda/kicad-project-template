@@ -21,13 +21,10 @@ def rename_project(project_name, new_name = "template"):
     os.rename(doc_path, doc_path.replace(project_name, new_name))
 
 def main():
-    print(f"{os.curdir}")
     yaml : YAML = YAML() 
     with open(Path("project_settings.yaml"), "r") as yaml_file:
         settings = yaml.load(yaml_file)
         
-    print(settings)
-
     rename_project(settings["project_name"], sys.argv[1])
     settings["project_name"] = sys.argv[1]
     settings["has_been_set_up"] = True
