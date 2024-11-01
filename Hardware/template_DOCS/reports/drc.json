@@ -1,50 +1,10 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2024-11-01T05:46:03+0000",
+    "date": "2024-11-01T05:47:48+0000",
     "kicad_version": "8.0.6",
     "schematic_parity": [],
     "source": "template.kicad_pcb",
-    "unconnected_items": [
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Pad 1 [/-V] of R2 on F.Cu",
-                    "pos": {
-                        "x": 112.375,
-                        "y": 93.8
-                    },
-                    "uuid": "ac591593-c603-46b7-8e6d-0b90ad73e7c4"
-                },
-                {
-                    "description": "Track [/-V] on F.Cu, length 1.0574 mm",
-                    "pos": {
-                        "x": 130.171339,
-                        "y": 101.513914
-                    },
-                    "uuid": "d59eda9b-027e-445e-989f-34b9246f8e79"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        }
-    ],
-    "violations": [
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [<no net>] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 117.8,
-                        "y": 103.4
-                    },
-                    "uuid": "616e6892-47b5-4153-9d90-90acfb08fd0a"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        }
-    ]
+    "unconnected_items": [],
+    "violations": []
 }

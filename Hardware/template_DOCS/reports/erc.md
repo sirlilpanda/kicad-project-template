@@ -1,16 +1,16 @@
 # ERC report
 
-report created at 05:46:05.361127 on 2024-11-01T05:46:03+0000.
+report created at 05:47:53.604797 on 2024-11-01T05:47:49+0000.
 
 the electronic rules check found:
-- 1 errors in your design
+- 0 errors in your design
 - 0 warns in your design
 
 number of errors and warns breakdown per sheet:
 | sheet name | number of errors | number of warns |
 | ---------- | ---------------- | --------------- | 
-| / | 1 | 0 | 
-| total             |  1                      | 0                       |
+| / | 0 | 0 | 
+| total             |  0                      | 0                       |
 
 below is a more indepth breakdown of the errors and warn per sheets.
 note you should only use this for quickly checking that the project
@@ -19,10 +19,7 @@ run your ERC in kicad so you can see where is erroring.
 
 
 # /
-## errors : 1
-### Pin not connected
-Symbol R2 Pin 2 [Passive, Line] at [x = 163.8mm, y = 113.0mm]
-
+## errors : 0
 
 ## warns : 0 
 
