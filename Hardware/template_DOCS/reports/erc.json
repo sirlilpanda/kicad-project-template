@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2024-11-01T05:28:42+0000",
+    "kicad_version": "8.0.6",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/92a86815-0425-4ac3-80bb-037195814139",
+            "violations": [
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol R2 Pin 2 [Passive, Line]",
+                            "pos": {
+                                "x": 0.81915,
+                                "y": 1.143
+                            },
+                            "uuid": "d2bd5de9-bfca-453d-ba38-b8c04f37bc0a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                },
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol R2 Pin 1 [Passive, Line]",
+                            "pos": {
+                                "x": 0.81915,
+                                "y": 1.0668
+                            },
+                            "uuid": "d4f2a52d-388f-4a41-81c5-9f25d42df68a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                }
+            ]
+        }
+    ],
+    "source": "template.kicad_sch"
+}
