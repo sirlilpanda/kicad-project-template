@@ -1,0 +1,3 @@
+# how the templates work
+
+templates work by using a json file to fill in the templating spots. for more infomation on the templates checkout [mustache templates](https://mustache.github.io/). these templates use a json file format as what they call a "hash" to fill out the templates. the hashs for each of these templates are layout in this dir. these are also the hashes ouputed by the processing scripts. useages for these scripts are at the top of the file.

@@ -1,0 +1,26 @@
+{
+
+    "date" : "the date of creation",
+    "time" : "the time of creation",
+    "total_warns" : "number",
+    "total_errors" : "number",
+    "sheets" : [
+        {
+            "name" : "string",
+            "number_of_errors" : "number",
+            "number_of_warns" : "number",
+            "warns" : [
+                {
+                    "name" : "string",
+                    "content" : "string"
+                }
+            ],
+            "errors" : [
+                {
+                    "name" : "string",
+                    "content" : "string"
+                }
+            ]
+        }    
+    ]
+}

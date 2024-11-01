@@ -1,0 +1,55 @@
+{
+
+    "date" : "the date of creation",
+    "time" : "the time of creation",
+    "total_warns" : "number",
+    "total_errors" : "number",
+    "violations" : {
+        "number_of_errors" : "number",
+        "number_of_warns" : "number",
+        "warns" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ],
+        "errors" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ]
+    },
+    "unconnected_items" : {
+        "number_of_errors" : "number",
+        "number_of_warns" : "number",
+        "warns" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ],
+        "errors" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ]
+    },
+    "schematic_parity" :{
+        "number_of_errors" : "number",
+        "number_of_warns" : "number",
+        "warns" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ],
+        "errors" : [
+            {
+                "name" : "string",
+                "content" : "string"
+            }
+        ]
+    }
+}
