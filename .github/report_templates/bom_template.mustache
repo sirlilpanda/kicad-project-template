@@ -1,0 +1,12 @@
+# BOM for {{project_name}}
+
+report created at {{time}} on {{date}}.
+
+{{project_name}} has a total of {{total_parts}} parts with a cost of ${{total_cost}}.
+
+| Reference | Value | Quantity | part number | cost |
+| --------- | ----- | -------- | ----------- | ---- |
+{{#parts}}
+| {{Reference}} | {{Value}} | {{Quantity}} | {{part_number}} | ${{cost}} |
+{{/parts}}
+|  | total | {{total_parts}} | total | ${{total_cost}} |
