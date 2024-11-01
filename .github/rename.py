@@ -22,7 +22,7 @@ def rename_project(project_name, new_name = "template"):
 
 def main():
     yaml : YAML = YAML() 
-    with open(Path("../.project_settings.yaml"), "r") as yaml_file:
+    with open(Path("../project_settings.yaml"), "r") as yaml_file:
         settings = yaml.load(yaml_file)
         
     print(settings)

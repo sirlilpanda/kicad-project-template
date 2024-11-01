@@ -14,7 +14,7 @@ jobs:
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
         with:
-          config: ${{ github.workspace }}/.project_settings.yaml
+          config: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes failed reports
         # workflows really need some more work done on them
@@ -30,7 +30,7 @@ jobs:
       
       - name: rename project if setup has not been completed
         if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
-        run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} > ${{ github.workspace }}/.project_settings.yaml 
+        run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} > ${{ github.workspace }}/project_settings.yaml 
 
       - name: commit production files
         if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
