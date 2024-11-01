@@ -1,6 +1,6 @@
 # ERC report
 
-report created at 05:31:57.986549 on 2024-11-01T05:31:56+0000.
+report created at 05:34:34.147941 on 2024-11-01T05:34:32+0000.
 
 the electronic rules check found:
 - 1 errors in your design
