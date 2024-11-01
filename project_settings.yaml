@@ -1,6 +1,6 @@
-has_been_set_up: true
+has_been_set_up: false
 
-# the name of the project and more than likely the name of the repo
+# this is set to the name of your repo during setup, you can change it later on using the rename tool
 project_name: template
 
 # this is a list of the production formats that you would like
