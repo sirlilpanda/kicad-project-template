@@ -1,24 +1,19 @@
-has_been_set_up: false
+has_been_set_up: true
 
 # the name of the project and more than likely the name of the repo
-project_name:
-    template
+project_name: template
 
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
 # but if you want something custom, implement it and throw in
 # a pull request
 #not support
-production_formats: 
-    gerber
+production_formats: gerber
 
 # these templates use mustache (https://mustache.github.io/mustache.5.html)
 # a logic less templating langauge for templating just about anything
-bom_template_path:
-    .github/report_templates/bom_template.mustache
+bom_template_path: .github/report_templates/bom_template.mustache
 
-erc_report_template_path:
-    .github/report_templates/erc_report_template.mustache
+erc_report_template_path: .github/report_templates/erc_report_template.mustache
 
-drc_report_template_path:
-    .github/report_templates/drc_report_template.mustache
+drc_report_template_path: .github/report_templates/drc_report_template.mustache
