@@ -102,6 +102,7 @@ jobs:
             default_author: github_actions
             message: 'failed ERC report'
             push: true
+            pull: "--rebase"
             add: |
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.json
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/erc.md
@@ -113,6 +114,7 @@ jobs:
             default_author: github_actions
             message: 'failed DRC report'
             push: true
+            pull: "--rebase"
             add: |
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.json
                 ${{ github.workspace }}/Hardware/template_DOCS/reports/drc.md
