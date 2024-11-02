@@ -8,7 +8,7 @@ on:
     outputs:
       settings:
         description: "Project Settings"
-        value: ${{ jobs.kicad_setup.steps.read_project_settings.outputs }}
+        value: ${{ jobs.kicad_setup.outputs.settings }}
 
 
 jobs:
@@ -16,6 +16,9 @@ jobs:
   kicad_setup:
 
     runs-on: ubuntu-latest
+
+    outputs:
+      settings: ${{ steps.read_project_settings.outputs }}
 
     steps:
 
