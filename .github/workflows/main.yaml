@@ -4,25 +4,28 @@ on:
 
 jobs:
 
+  kicad_setup:
+    
+    uses: ./.github/workflows/kicad_setup.yaml
+
+
   setup_job:
 
     runs-on: ubuntu-latest
     name: set up project 
 
+    needs: kicad_setup
+
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
 
     steps:
-
-      - name: KiCAD Setup
-        id: setup
-        run: ./.github/workflows/kicad_setup.yaml
       
       - name: rename project if setup has not been completed
-        if: ${{ !cancelled() && steps.setup.outputs.settings.has_been_set_up}} 
+        if: ${{ !cancelled() && needs.kicad_setup.outputs.settings.has_been_set_up}} 
         run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} 
 
       - name: commit production files
-        if: ${{ !cancelled() && steps.setup.outputs.settings.has_been_set_up}} 
+        if: ${{ !cancelled() && needs.kicad_setup.outputs.settings.has_been_set_up}} 
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
@@ -30,40 +33,40 @@ jobs:
           push: true
           add: "."
 
+
   kicad_job:
+
     runs-on: ubuntu-latest
     name: creating BOM schematic pdf and grbrs 
 
-    steps:
+    needs: kicad_setup
 
-      - name: KiCAD Setup
-        id: setup
-        run: ./.github/workflows/kicad_setup.yaml
+    steps:
 
       - name: Export production files
         id: production
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/${{steps.setup.outputs.settings.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/${{steps.setup.outputs.settings.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/${{steps.setup.outputs.settings.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/${{needs.kicad_setup.outputs.settings.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PCB/grbr.zip
 
       - name: Run KiCad DRC
         id: drc
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/${{steps.setup.outputs.settings.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
@@ -73,7 +76,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/${{steps.setup.outputs.settings.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json
@@ -81,25 +84,25 @@ jobs:
       - name: move DRC report
         if: '!cancelled()'
         run:
-          mv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/drc.json
+          mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.json
 
       - name: move ERC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/erc.json
+            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.json
 
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/${{steps.setup.outputs.settings.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/BOM/bom_report.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.bom_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bom_report.md
       
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.setup.outputs.settings.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/erc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.md
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.setup.outputs.settings.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.setup.outputs.settings.project_name}}_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.md
   
       - name: commit production files
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
