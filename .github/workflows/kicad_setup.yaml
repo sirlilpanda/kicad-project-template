@@ -1,0 +1,39 @@
+
+name: "KiCAD Setup"
+description: "On-demand workflow that sets up dependencies for KiCAD related actions."
+
+
+on:
+  workflow_call:
+
+    outputs:
+      settings:
+        description: "Project Settings"
+        value: ${{ jobs.kicad_setup.steps.read_project_settings.outputs }}
+
+
+runs:
+
+  using: "composite"
+
+  steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Load project settings
+      uses: pietrobolcato/action-read-yaml@1.0.0
+      id: read_project_settings
+      with:
+        config: ${{ github.workspace }}/project_settings.yaml
+
+    - name: Setting up Python and Chevron
+      if: ${{ !cancelled() && steps.yaml_read.read_project_settings.has_been_set_up }} 
+      uses: actions/setup-python@v5 
+      with:
+          python-version: '3.10'
+          cache: 'pip'
+    
+    - name: Install Python requirements 
+      if: ${{ !cancelled() && steps.yaml_read.read_project_settings.has_been_set_up }} 
+      run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
