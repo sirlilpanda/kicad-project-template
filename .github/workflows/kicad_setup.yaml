@@ -5,8 +5,7 @@ name: "KiCAD Setup"
 on:
   workflow_call:
 
-    outputs:
-      settings: ${{ jobs.kicad_setup.outputs }}
+    outputs: ${{ jobs.kicad_setup.outputs }}
 
 
 jobs:
