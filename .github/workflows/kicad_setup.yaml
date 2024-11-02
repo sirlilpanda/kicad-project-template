@@ -18,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      settings: ${{ steps.read_project_settings.outputs }}
+      settings:
+        description: "Project Settings" 
+        value: ${{ steps.read_project_settings.outputs }}
 
     steps:
 
