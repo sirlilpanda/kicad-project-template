@@ -74,6 +74,9 @@ jobs:
 
   kicad_push_reports:
 
+    runs-on: ubuntu-latest
+    name: "KiCAD push DRC/ERC reports"
+
     needs: [kicad_drc, kicad_erc]
 
     steps:
