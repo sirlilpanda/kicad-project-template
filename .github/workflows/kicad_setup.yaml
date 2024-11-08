@@ -5,7 +5,9 @@ name: "KiCAD Setup"
 on:
   workflow_call:
 
-    outputs: ${{ jobs.kicad_setup.outputs }}
+    outputs: 
+      settings: 
+        value: ${{ jobs.kicad_setup.outputs.settings }}
 
 
 jobs:
@@ -14,7 +16,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    outputs: ${{ steps.read_project_settings.outputs }}
+    outputs: 
+      settings: ${{ steps.read_project_settings.outputs }}
 
     steps:
 

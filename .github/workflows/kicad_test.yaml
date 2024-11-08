@@ -28,7 +28,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/${{needs.kicad_setup.outputs.project_name}}_PROJECT/${{needs.kicad_setup.outputs.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
@@ -36,11 +36,11 @@ jobs:
       - name: Move JSON DRC report
         if: '!cancelled()'
         run:
-          mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/drc.json
+          mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.json
 
       - name: Create markdown DRC report
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/drc.md
   
 
   kicad_erc:
@@ -57,7 +57,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{needs.kicad_setup.outputs.project_name}}_PROJECT/${{needs.kicad_setup.outputs.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json
@@ -65,11 +65,11 @@ jobs:
       - name: Move JSON ERC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/erc.json
+            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.json
 
       - name: Create markdown ERC report
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.project_name}}_DOCS/reports/erc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/reports/erc.md
 
 
   kicad_push_reports:
