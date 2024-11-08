@@ -2,14 +2,11 @@
 name: "KiCAD Setup"
 
 
-on:
-  workflow_call:
+outputs:
 
-    outputs:
-
-      settings:
-        description: "Project Settings"
-        value: ${{ jobs.kicad_setup.steps.read_project_settings.outputs }}
+  settings:
+    description: "Project Settings"
+    value: ${{ steps.read_project_settings.outputs }}
 
 
 runs:
