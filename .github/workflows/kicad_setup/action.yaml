@@ -30,4 +30,5 @@ runs:
     
     - name: Install Python requirements 
       if: ${{ !cancelled() && steps.yaml_read.read_project_settings.has_been_set_up }} 
+      shell: bash
       run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
