@@ -19,7 +19,7 @@ jobs:
 
       - name: KiCAD Setup
         id: kicad_setup
-        run: ./.github/workflows/kicad_setup.yaml
+        uses: ./.github/workflows/kicad_setup.yaml
 
       - name: Run KiCAD DRC
         id: drc
@@ -53,7 +53,7 @@ jobs:
 
       - name: KiCAD Setup
         id: kicad_setup
-        run: ./.github/workflows/kicad_setup.yaml
+        uses: ./.github/workflows/kicad_setup.yaml
 
       - name: Run KiCAD ERC
         id: erc

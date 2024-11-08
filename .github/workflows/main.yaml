@@ -19,7 +19,7 @@ jobs:
 
       - name: KiCAD Setup
         id: kicad_setup
-        run: ./.github/workflows/kicad_setup.yaml
+        uses: ./.github/workflows/kicad_setup.yaml
       
       - name: rename project if setup has not been completed
         if: ${{ !cancelled() && steps.kicad_setup.outputs.settings.has_been_set_up}} 
@@ -47,7 +47,7 @@ jobs:
 
       - name: KiCAD Setup
         id: kicad_setup
-        run: ./.github/workflows/kicad_setup.yaml
+        uses: ./.github/workflows/kicad_setup.yaml
 
       - name: Export production files
         id: production
