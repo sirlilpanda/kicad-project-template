@@ -14,6 +14,9 @@ jobs:
 
     steps:
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: KiCAD Setup
         id: kicad_setup
         run: ./.github/workflows/kicad_setup.yaml
@@ -44,6 +47,9 @@ jobs:
     name: "KiCAD ERC"
 
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: KiCAD Setup
         id: kicad_setup
