@@ -4,9 +4,7 @@ name: "KiCAD Setup"
 
 outputs:
 
-  settings:
-    description: "Project Settings"
-    value: ${{ steps.read_project_settings.outputs }}
+  ${{ steps.read_project_settings.outputs }}
 
 
 runs:
