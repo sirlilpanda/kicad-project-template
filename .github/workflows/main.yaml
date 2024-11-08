@@ -4,30 +4,26 @@ on:
 
 jobs:
 
-  kicad_setup:
-
-    name: "KiCAD Setup"
-    
-    uses: ./.github/workflows/kicad_setup.yaml
-
 
   setup_job:
 
     runs-on: ubuntu-latest
     name: set up project 
 
-    needs: kicad_setup
-
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
 
     steps:
+
+      - name: KiCAD Setup
+        id: kicad_setup
+        run: ./.github/workflows/kicad_setup.yaml
       
       - name: rename project if setup has not been completed
-        if: ${{ !cancelled() && needs.kicad_setup.outputs.settings.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.kicad_setup.outputs.settings.has_been_set_up}} 
         run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} 
 
       - name: commit production files
-        if: ${{ !cancelled() && needs.kicad_setup.outputs.settings.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.kicad_setup.outputs.settings.has_been_set_up}} 
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
@@ -41,31 +37,33 @@ jobs:
     runs-on: ubuntu-latest
     name: creating BOM schematic pdf and grbrs 
 
-    needs: kicad_setup
-
     steps:
+
+      - name: KiCAD Setup
+        id: kicad_setup
+        run: ./.github/workflows/kicad_setup.yaml
 
       - name: Export production files
         id: production
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PROJECT/${{steps.kicad_setup.outputs.settings.project_name}}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/${{needs.kicad_setup.outputs.settings.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PROJECT/${{steps.kicad_setup.outputs.settings.project_name}}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/${{needs.kicad_setup.outputs.settings.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_DOCS/${{steps.kicad_setup.outputs.settings.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_PCB/grbr.zip
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/${{needs.kicad_setup.outputs.settings.bom_template_path}} ${{ github.workspace }}/Hardware/${{needs.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bom_report.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/${{steps.kicad_setup.outputs.settings.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.kicad_setup.outputs.settings.project_name}}_DOCS/BOM/bom_report.md
       
       - name: commit production files
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
