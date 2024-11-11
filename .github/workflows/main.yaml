@@ -3,7 +3,7 @@ on:
         branches: [main, master, workflow_testing]
 
 jobs:
-  setup_job:
+  setup_new_project:
     runs-on: ubuntu-latest
     name: set up project 
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
@@ -42,9 +42,27 @@ jobs:
           push: true
           add: "."
 
+  setup_matrixs:
+    runs-on: ubuntu-latest
+    name: matrix setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: read-yaml-file
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        id: read_action_js
+        with:
+          config: ${{ github.workspace }}/project_settings.yaml
+      
+      - name: parse matrix
+        run:
+          echo ${{steps.read_action_js.outputs.sub_pcb_names}}
+
   DRC:
     runs-on: ubuntu-latest
     name: checking and creating DRC report
+    needs: setup_matrixs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -96,6 +114,7 @@ jobs:
   ERC:
     runs-on: ubuntu-latest
     name: checking and creating ERC report
+    needs: setup_matrixs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -143,10 +162,10 @@ jobs:
           name: erc-report
           path: ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
 
-
   production_job:
     runs-on: ubuntu-latest
     name: creating production files bom sch gerbers 
+    needs: setup_matrixs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
