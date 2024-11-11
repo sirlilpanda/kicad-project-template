@@ -221,7 +221,7 @@ jobs:
     runs-on: ubuntu-latest
     name: commit production files
     if: ${{ always() }}
-    needs: [DRC, ERC, production_job]
+    needs: [DRC, ERC, production_job, setup_matrixs]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
