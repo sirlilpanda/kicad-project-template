@@ -22,7 +22,7 @@ project_name: template
 #   - template_2
 # ========================================================
 sub_pcb_names: 
-  
+  null
 
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
