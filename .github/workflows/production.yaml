@@ -55,6 +55,7 @@ jobs:
             default_author: github_actions
             message: 'production files'
             push: true
+            pull: '--rebase --autostash ...'
             tag_push: '--force' # just makes life easier
             tag: 'v1.0.0 --force'
             add: "."
