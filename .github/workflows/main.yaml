@@ -44,7 +44,7 @@ jobs:
 
   DRC:
     runs-on: ubuntu-latest
-    name: set up project 
+    name: checking and creating DRC report
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: set up project 
+    name: checking and creating ERC report
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -146,7 +146,7 @@ jobs:
 
   production_job:
     runs-on: ubuntu-latest
-    name: set up project 
+    name: creating production files bom sch gerbers 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -230,17 +230,18 @@ jobs:
         with:
           pattern: erc-report
           path: ${{ github.workspace }}
-          
+
       - name: check downloads
         run: ls -R
 
       - name: Moving files to correct location
         run: |  
-            mv ${{ github.workspace }}/${{steps.read_action_js.outputs.project_name}}_schematic.pdf ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/grbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
-            mv ${{ github.workspace }}/erc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
-            mv ${{ github.workspace }}/drc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+            mv ${{ github.workspace }}/production-files/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/production-files/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
+            mv ${{ github.workspace }}/production-files/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
+
+            mv ${{ github.workspace }}erc-report/erc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
+            mv ${{ github.workspace }}drc-report/drc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
 
       - name: commit production files
         uses: EndBug/add-and-commit@v9
