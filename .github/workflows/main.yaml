@@ -69,7 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     name: checking and creating DRC report
     needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
+      - name: check matrix
+        run: echo ${{ matrix.project_name }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
