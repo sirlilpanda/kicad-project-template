@@ -21,7 +21,10 @@ project_name: template
 #   - template
 #   - template_2
 # ========================================================
-sub_pcb_names: [pcb_1, pcb_2, pcb_3]
+sub_pcb_names: 
+  - "pcb_1"
+  - "pcb_2"
+  - "pcb_3"
 
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
