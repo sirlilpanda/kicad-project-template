@@ -9,7 +9,10 @@ def main():
         project_settings = yaml.safe_load(txt.read())
         project_name = project_settings["project_name"]
         subnames = project_settings["sub_pcb_names"]
-        print(f"projects={[project_name] + subnames}")
+        if (subnames):
+            print(f"projects={[project_name] + subnames}") 
+        else:
+            print(f"projects={[project_name]}") 
 
 if __name__ == "__main__":
     main()
