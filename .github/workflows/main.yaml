@@ -132,10 +132,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: juliojimenez/yamler@v1.1.0
         id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
@@ -183,10 +183,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: juliojimenez/yamler@v1.1.0
         id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
@@ -239,10 +239,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: juliojimenez/yamler@v1.1.0
         id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: download production files
         uses: actions/download-artifact@v4
