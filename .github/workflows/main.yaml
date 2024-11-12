@@ -233,6 +233,10 @@ jobs:
             mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
             mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
+      - name: creating BOM report in markdown
+        if: ${{ !cancelled() }} 
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+             
 
       - name: upload report
         uses: actions/upload-artifact@v4
@@ -241,6 +245,7 @@ jobs:
           path: |
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
      
   upload_job:
@@ -283,6 +288,7 @@ jobs:
         run: |  
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/*schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
             mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
