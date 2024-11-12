@@ -111,17 +111,17 @@ jobs:
       - name: move DRC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{matrix.project_name}}_DOCS/reports/drc.json
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{matrix.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
       
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
           name: drc-report-${{ matrix.project_name }}
-          path: ${{ github.workspace }}/Hardware/${{matrix.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
 
   ERC:
     runs-on: ubuntu-latest
