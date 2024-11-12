@@ -61,8 +61,8 @@ there are currently very few project settings that can be changed (will will be 
 |production_formats         | the output production format for the PCBs                         |
 |sub_pcb_names              | the names of all other kicad projects within the repo             |
 |bom_template_path          | the template used to write the bom report files                   |
-|erc_report_template_path   | the template used to write the bom report files                   |
-|drc_report_template_path   | the template used to write the bom report files                   |
+|erc_report_template_path   | the template used to write the erc report files                   |
+|drc_report_template_path   | the template used to write the drc report files                   |
 
 
 ## project setup
