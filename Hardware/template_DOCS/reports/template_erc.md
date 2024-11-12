@@ -1,35 +1,6 @@
----
-schema: > 
-  {  
-      "date" : "the date of creation",
-      "time" : "the time of creation",
-      "total_warns" : "number",
-      "total_errors" : "number",
-      "sheets" : [
-          {
-              "name" : "string",
-              "number_of_errors" : "number",
-              "number_of_warns" : "number",
-              "warns" : [
-                  {
-                      "name" : "string",
-                      "content" : "string"
-                  }
-              ],
-              "errors" : [
-                  {
-                      "name" : "string",
-                      "content" : "string"
-                  }
-              ]
-          }    
-      ]
-  }
-
----
 # ERC report
 
-report created at 03:35:04.730469 on 2024-11-12T03:35:04+0000.
+report created at 03:41:52.971894 on 2024-11-12T03:41:52+0000.
 
 the electronic rules check found:
 - 0 errors in your design
