@@ -44,7 +44,7 @@ jobs:
 
   setup_matrixs:
     outputs:
-      output1: ${{ steps.matrix.output.projects }}
+      projects: ${{ steps.projects.outputs.projects }}
     runs-on: ubuntu-latest
     name: matrix setup
     steps:
@@ -62,7 +62,7 @@ jobs:
         run: pip install pyyaml
     
       - name: get kicad project names
-        id: matrix
+        id: projects
         run:
           python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
   DRC:
