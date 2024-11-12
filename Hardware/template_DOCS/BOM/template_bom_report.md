@@ -1,8 +1,8 @@
-# BOM for bill_of_material
+# BOM for template_bill_of_material
 
-report created at 11:58:31.585209 on 01-11-2024.
+report created at 02:54:59.805801 on 12-11-2024.
 
-bill_of_material has a total of 3 parts with a cost of $0.
+template_bill_of_material has a total of 3 parts with a cost of $0.
 
 | Reference | Value | Quantity | part number | cost |
 | --------- | ----- | -------- | ----------- | ---- |

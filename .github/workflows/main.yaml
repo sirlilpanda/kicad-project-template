@@ -2,8 +2,13 @@ on:
     push:
         branches: [main, master, workflow_testing]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
 jobs:
-  setup_job:
+  setup_new_project:
     runs-on: ubuntu-latest
     name: set up project 
     if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
@@ -13,28 +18,28 @@ jobs:
 
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        id: yaml
         with:
           config: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes failed reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
       
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
       
       - name: rename project if setup has not been completed
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} 
 
       - name: commit production files
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
@@ -42,29 +47,60 @@ jobs:
           push: true
           add: "."
 
+  setup_matrixs:
+    outputs:
+      projects: ${{ steps.projects.outputs.projects }}
+    runs-on: ubuntu-latest
+    name: matrix setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: Setting up Python
+        # workflows really need some more work done on them
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
+
+      - name: installing requirements  
+        run: pip install pyyaml
+    
+      - name: get kicad project names
+        id: projects
+        run:
+          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
+  
   DRC:
     runs-on: ubuntu-latest
-    name: checking and creating DRC report
+    name: DRC report
+    needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
+      - name: check matrix
+        run: echo ${{ matrix.project_name }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Run KiCad DRC
@@ -72,7 +108,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
@@ -81,41 +117,48 @@ jobs:
       - name: move DRC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.read_action_js.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
       
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: drc-report
-          path: ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+          name: drc-report-${{ matrix.project_name }}
+          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
 
   ERC:
     runs-on: ubuntu-latest
-    name: checking and creating ERC report
+    name: ERC report
+    needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
+      - name: check matrix
+        run: echo ${{ matrix.project_name }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Run KiCad ERC
@@ -123,50 +166,53 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
           sch_erc: true
           report_format: json
-          sch_erc_file: erc.json
+          sch_erc_file: erc.json   
       
       - name: move ERC report
         if: '!cancelled()'
         run:
-              mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.json
-  
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json
+      
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.read_action_js.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
-    
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
+      
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: erc-report
-          path: ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
-
+          name: erc-report-${{ matrix.project_name }}
+          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
 
   production_job:
     runs-on: ubuntu-latest
     name: creating production files bom sch gerbers 
+    needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Export production files
@@ -174,61 +220,65 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
+      - name: creating BOM report in markdown
+        if: ${{ !cancelled() }} 
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+             
 
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: production-files
+          name: production-files-${{matrix.project_name}}
           path: |
-            ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
-            ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
-    
-  
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
+     
   upload_job:
     runs-on: ubuntu-latest
     name: commit production files
     if: ${{ always() }}
-    needs: [DRC, ERC, production_job]
+    needs: [DRC, ERC, production_job, setup_matrixs]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: download production files
         uses: actions/download-artifact@v4
         with:
-          pattern: production-files
+          pattern: production-files-*
           path: ${{ github.workspace }}
 
       - name: download drc report
         uses: actions/download-artifact@v4
         with:
-          pattern: drc-report
+          pattern: drc-report-*
           path: ${{ github.workspace }}
           
       - name: download erc report
         uses: actions/download-artifact@v4
         with:
-          pattern: erc-report
+          pattern: erc-report-*
           path: ${{ github.workspace }}
 
       - name: check downloads
@@ -236,12 +286,12 @@ jobs:
 
       - name: Moving files to correct location
         run: |  
-            mv ${{ github.workspace }}/production-files/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/production-files/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/production-files/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
-
-            mv ${{ github.workspace }}/erc-report/erc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
-            mv ${{ github.workspace }}/drc-report/drc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/*schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
+            mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
+            mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
 
       - name: commit production files
         uses: EndBug/add-and-commit@v9
@@ -252,4 +302,12 @@ jobs:
             pull: '--rebase --autostash'
             tag_push: '--force' # just makes life easier
             tag: 'v1.0.0 --force'
-            add: "."
+            add: |
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*erc.md
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*drc.md
+      - name: list everything
+        run: ls -R
