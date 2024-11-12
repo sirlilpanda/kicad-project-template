@@ -64,7 +64,7 @@ jobs:
       - name: get kicad project names
         id: matrix
         run:
-          python.exe .\get_pcb_names.py ../project_settings.yaml
+          python get_pcb_names.py ../project_settings.yaml
   DRC:
     runs-on: ubuntu-latest
     name: checking and creating DRC report
