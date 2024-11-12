@@ -265,7 +265,7 @@ jobs:
       - name: download erc report
         uses: actions/download-artifact@v4
         with:
-          pattern: erc-report
+          pattern: erc-report-*
           path: ${{ github.workspace }}
 
       - name: check downloads
