@@ -184,6 +184,9 @@ jobs:
     runs-on: ubuntu-latest
     name: creating production files bom sch gerbers 
     needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -211,28 +214,28 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/${{steps.yaml.outputs.project_name}}.kicad_sch
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/${{steps.yaml.outputs.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
 
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: production-files
+          name: production-files-${{matrix.project_name}}
           path: |
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
     
   
   upload_job:
@@ -273,9 +276,9 @@ jobs:
 
       - name: Moving files to correct location
         run: |  
-            mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-            mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/*schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
             mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
       # find . -name "*drc.md" -exec mv '{}' ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/ \
