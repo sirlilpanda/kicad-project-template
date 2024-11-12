@@ -43,22 +43,28 @@ jobs:
           add: "."
 
   setup_matrixs:
+    outputs:
+      output1: ${{ steps.matrix }}
     runs-on: ubuntu-latest
     name: matrix setup
     steps:
       - name: Checkout
         uses: actions/checkout@v4
   
-      - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+      - name: Setting up Python
+        # workflows really need some more work done on them
+        uses: actions/setup-python@v5 
         with:
-          config: ${{ github.workspace }}/project_settings.yaml
-      
-      - name: parse matrix
-        run:
-          echo ${{steps.read_action_js.outputs.sub_pcb_names}}
+            python-version: '3.10'
+            cache: 'pip'
 
+      - name: installing requirements  
+        run: pip install pyyaml
+    
+      - name: get kicad project names
+        id: matrix
+        run:
+          python.exe .\get_pcb_names.py ../project_settings.yaml
   DRC:
     runs-on: ubuntu-latest
     name: checking and creating DRC report
