@@ -44,7 +44,7 @@ jobs:
 
   setup_matrixs:
     outputs:
-      output1: ${{ steps.matrix }}
+      output1: ${{ steps.matrix.output.projects }}
     runs-on: ubuntu-latest
     name: matrix setup
     steps:
@@ -64,7 +64,7 @@ jobs:
       - name: get kicad project names
         id: matrix
         run:
-          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml
+          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
   DRC:
     runs-on: ubuntu-latest
     name: checking and creating DRC report
@@ -266,19 +266,19 @@ jobs:
             mv ${{ github.workspace }}/production-files/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
             mv ${{ github.workspace }}/erc-report/erc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
             mv ${{ github.workspace }}/drc-report/drc.md ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
-
-      - name: commit production files
-        uses: EndBug/add-and-commit@v9
-        with:
-            default_author: github_actions
-            message: 'production files'
-            push: true
-            pull: '--rebase --autostash'
-            tag_push: '--force' # just makes life easier
-            tag: 'v1.0.0 --force'
-            add: |
-              ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
-              ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
-              ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
-              ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
-              ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+      # commented out for the moment as i dont care about pushing anything for now
+      # - name: commit production files
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #       default_author: github_actions
+      #       message: 'production files'
+      #       push: true
+      #       pull: '--rebase --autostash'
+      #       tag_push: '--force' # just makes life easier
+      #       tag: 'v1.0.0 --force'
+      #       add: |
+      #         ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/${{steps.read_action_js.outputs.project_name}}_schematic.pdf
+      #         ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
+      #         ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PCB/grbr.zip
+      #         ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/erc.md
+      #         ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
