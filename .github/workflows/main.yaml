@@ -67,7 +67,7 @@ jobs:
           python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
   DRC:
     runs-on: ubuntu-latest
-    name: checking and creating DRC report
+    name: DRC report
     needs: setup_matrixs
     strategy:
       matrix:
@@ -125,7 +125,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: checking and creating DRC report
+    name: ERC report
     needs: setup_matrixs
     strategy:
       matrix:
@@ -160,7 +160,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json   
