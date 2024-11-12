@@ -80,21 +80,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
         with:
-            config: ${{ github.workspace }}/project_settings.yaml
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.read_action_js.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Run KiCad DRC
@@ -102,7 +102,7 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_pcb: Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/${{steps.read_action_js.outputs.project_name}}.kicad_pcb
+          kicad_pcb: Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/${{steps.yaml.outputs.project_name}}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
@@ -111,17 +111,17 @@ jobs:
       - name: move DRC report
         if: '!cancelled()'
         run:
-            mv ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json
+            mv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.read_action_js.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.md
       
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
           name: drc-report
-          path: ${{ github.workspace }}/Hardware/${{steps.read_action_js.outputs.project_name}}_DOCS/reports/drc.md
+          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.md
 
   ERC:
     runs-on: ubuntu-latest
