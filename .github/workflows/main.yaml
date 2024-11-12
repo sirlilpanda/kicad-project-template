@@ -165,14 +165,14 @@ jobs:
           report_format: json
           sch_erc_file: erc.json   
       
-      - name: move DRC report
+      - name: move ERC report
         if: '!cancelled()'
         run:
             mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json
       
-      - name: creating DRC report in markdown
+      - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
       
       - name: upload report
         uses: actions/upload-artifact@v4
@@ -276,7 +276,7 @@ jobs:
             mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{steps.yaml.outputs.project_name}}_schematic.pdf
             mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/bill_of_materials.csv
             mv ${{ github.workspace }}/production-files/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/grbr.zip
-            mv ${{ github.workspace }}/erc-report/erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.md
+            mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
             mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
       # find . -name "*drc.md" -exec mv '{}' ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/ \
       # commented out for the moment as i dont care about pushing anything for now
