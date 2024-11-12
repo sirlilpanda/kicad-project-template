@@ -1,0 +1,4 @@
+"Refs","Value","Footprint","Qty","DNP"
+"BT1","Battery","Battery:BatteryHolder_LINX_BAT-HLD-012-SMT","1",""
+"D1","LED","LED_SMD:LED_0805_2012Metric","1",""
+"R1","R","Resistor_SMD:R_0805_2012Metric","1",""
