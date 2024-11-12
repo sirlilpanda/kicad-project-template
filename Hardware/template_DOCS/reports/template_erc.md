@@ -1,5 +1,5 @@
 ---
-schema:
+schema: >
 {
 
     "date" : "the date of creation",
@@ -26,10 +26,11 @@ schema:
         }    
     ]
 }
+
 ---
 # ERC report
 
-report created at 03:26:01.488065 on 2024-11-12T03:26:01+0000.
+report created at 03:30:55.316672 on 2024-11-12T03:30:55+0000.
 
 the electronic rules check found:
 - 0 errors in your design
