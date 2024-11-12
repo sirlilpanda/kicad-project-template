@@ -281,22 +281,21 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
             mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
-      # find . -name "*drc.md" -exec mv '{}' ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/ \
-      # commented out for the moment as i dont care about pushing anything for now
-      # - name: commit production files
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #       default_author: github_actions
-      #       message: 'production files'
-      #       push: true
-      #       pull: '--rebase --autostash'
-      #       tag_push: '--force' # just makes life easier
-      #       tag: 'v1.0.0 --force'
-      #       add: |
-      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
-      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
-      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
-      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*erc.md
-      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*drc.md
+
+      - name: commit production files
+        uses: EndBug/add-and-commit@v9
+        with:
+            default_author: github_actions
+            message: 'production files'
+            push: true
+            pull: '--rebase --autostash'
+            tag_push: '--force' # just makes life easier
+            tag: 'v1.0.0 --force'
+            add: |
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*erc.md
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*drc.md
       - name: list everything
         run: ls -R
