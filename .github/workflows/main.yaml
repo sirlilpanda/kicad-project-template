@@ -239,7 +239,7 @@ jobs:
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: production-files-${{matrix.project_name}}
+          name: production-files-${{matrix.project_name}}.zip
           path: |
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv

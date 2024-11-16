@@ -50,7 +50,7 @@ contained in this template are:
 - `README.md` : this file, suggest you change this one creating your project
 
 ## project settings
-there are currently very few project settings that can be changed (will will be change in the furture) these are:
+there are currently very few project settings that can be changed (will will be change in the future) these are:
 | setting                   | description                                                       |
 | ------------------------- | ----------------------------------------------------------------- |
 |has_been_set_up            | a flag to tell the setup action if the project has been set up    | 
@@ -96,5 +96,3 @@ this should fix the problem if not, go harass stack overflow they need it
 
 
 ## improvements
-
-support multiple kicad projects
