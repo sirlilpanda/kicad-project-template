@@ -284,11 +284,16 @@ jobs:
       - name: Generate iboms
         uses: chuckwagoncomputing/ibom-action@main
         with:
-          files: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
-          
+          files: ${{ github.workspace }}Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+
       - name: check outputs
         run: ls -R
         
+      - name: upload report
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ibom-${{ matrix.project_name }}
+          path: ${{ github.workspace }}/ibom/*
 
 
   upload_job:
