@@ -267,18 +267,6 @@ jobs:
           pattern: production-files-*
           path: ${{ github.workspace }}
 
-      # - name: download drc report
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     pattern: drc-report-*
-      #     path: ${{ github.workspace }}
-          
-      # - name: download erc report
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     pattern: erc-report-*
-      #     path: ${{ github.workspace }}
-
       - name: check downloads
         run: ls -R
 
@@ -289,9 +277,6 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             
-        # mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
-        # mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
-
       - name: commit production files
         uses: EndBug/add-and-commit@v9
         with:
@@ -306,7 +291,5 @@ jobs:
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*erc.md
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*drc.md
       - name: list everything
         run: ls -R
