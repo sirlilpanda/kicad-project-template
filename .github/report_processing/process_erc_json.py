@@ -48,5 +48,9 @@ def process_report(report : str) -> dict:
         "total_warns", 
         sum(sheet.number_of_warns for sheet in sheets)    
     )
-
+    
+    out_dict.setdefault(
+        "has_violations",
+        True if out_dict["total_warns"] + out_dict["total_errors"] else False
+    )
     return out_dict
