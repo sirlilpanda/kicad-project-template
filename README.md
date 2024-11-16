@@ -9,7 +9,7 @@ This is a simple project template for new kicad projects. This template has some
 - bom
 - schematic pdf
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. these reports are uploaded as summaries within the github actions tab. This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
