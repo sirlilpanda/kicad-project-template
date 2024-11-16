@@ -51,7 +51,7 @@ jobs:
     outputs:
       projects: ${{ steps.projects.outputs.projects }}
     runs-on: ubuntu-latest
-    name: matrix setup
+    name: matrix setup 🗓️
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,7 +73,7 @@ jobs:
   
   DRC:
     runs-on: ubuntu-latest
-    name: DRC report
+    name: DRC report 📟📟
     needs: setup_matrixs
     strategy:
       matrix:
@@ -113,25 +113,24 @@ jobs:
           report_format: json
           pcb_drc_file: drc.json
       
-      
-      - name: move DRC report
-        if: '!cancelled()'
-        run:
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json
-      
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+         ${{matrix.project_name}}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
-      - name: upload report
-        uses: actions/upload-artifact@v4
-        with: 
-          name: drc-report-${{ matrix.project_name }}
-          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+      - name: upload report summary
+        if: ${{ always() }}
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
+        
+      # - name: upload report
+      #   uses: actions/upload-artifact@v4
+      #   with: 
+      #     name: drc-report-${{ matrix.project_name }}
+      #     path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
 
   ERC:
     runs-on: ubuntu-latest
-    name: ERC report
+    name: ERC report ⚡⚡
     needs: setup_matrixs
     strategy:
       matrix:
@@ -171,24 +170,23 @@ jobs:
           report_format: json
           sch_erc_file: erc.json   
       
-      - name: move ERC report
-        if: '!cancelled()'
-        run:
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json
-      
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
-      
-      - name: upload report
-        uses: actions/upload-artifact@v4
-        with: 
-          name: erc-report-${{ matrix.project_name }}
-          path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
+
+      - name: upload report summary
+        if: ${{ always() }}
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
+
+      # - name: upload report
+      #   uses: actions/upload-artifact@v4
+      #   with: 
+      #     name: erc-report-${{ matrix.project_name }}
+      #     path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
 
   production_job:
     runs-on: ubuntu-latest
-    name: creating production files bom sch gerbers 
+    name: creating production files bom sch gerbers 📂 
     needs: setup_matrixs
     strategy:
       matrix:
@@ -241,16 +239,16 @@ jobs:
       - name: upload report
         uses: actions/upload-artifact@v4
         with: 
-          name: production-files-${{matrix.project_name}}
+          name: production-files-${{matrix.project_name}}.zip
           path: |
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
-     
+
   upload_job:
     runs-on: ubuntu-latest
-    name: commit production files
+    name: commit production files 
     if: ${{ always() }}
     needs: [DRC, ERC, production_job, setup_matrixs]
     steps:
@@ -269,18 +267,6 @@ jobs:
           pattern: production-files-*
           path: ${{ github.workspace }}
 
-      - name: download drc report
-        uses: actions/download-artifact@v4
-        with:
-          pattern: drc-report-*
-          path: ${{ github.workspace }}
-          
-      - name: download erc report
-        uses: actions/download-artifact@v4
-        with:
-          pattern: erc-report-*
-          path: ${{ github.workspace }}
-
       - name: check downloads
         run: ls -R
 
@@ -290,9 +276,7 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
-            mv ${{ github.workspace }}/erc-report-*/*erc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
-            mv ${{ github.workspace }}/drc-report-*/*drc.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/
-
+            
       - name: commit production files
         uses: EndBug/add-and-commit@v9
         with:
@@ -307,7 +291,5 @@ jobs:
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*erc.md
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/*drc.md
       - name: list everything
         run: ls -R

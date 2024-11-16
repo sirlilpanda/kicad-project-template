@@ -5,6 +5,7 @@ import json
 class Sheet:
     def __init__(self, json_obj : dict) -> None:
         self.name : str = json_obj["path"]
+        self.name_md : str = self.name.replace(" ", "-")
         self.number_of_errors : int = 0
         self.number_of_warns : int = 0
         self.errors : list[Violation] = list()
@@ -49,4 +50,8 @@ def process_report(report : str) -> dict:
         sum(sheet.number_of_warns for sheet in sheets)    
     )
 
+    out_dict.setdefault(
+        "has_violations",
+        True if out_dict["total_warns"] + out_dict["total_errors"] else False
+    )
     return out_dict

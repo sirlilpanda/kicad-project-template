@@ -3,6 +3,7 @@ import os
 import sys
 from ruamel.yaml import YAML
 
+# renames the main project in the template dir and in the project settings
 def rename_project(project_name, new_name = "template"):
     """renames the kicad project"""
     project_path = str(Path(f"Hardware/{project_name}_PROJECT"))
