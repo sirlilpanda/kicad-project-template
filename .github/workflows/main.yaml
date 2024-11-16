@@ -51,7 +51,7 @@ jobs:
     outputs:
       projects: ${{ steps.projects.outputs.projects }}
     runs-on: ubuntu-latest
-    name: matrix setup
+    name: matrix setup 🗓️
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,7 +73,7 @@ jobs:
   
   DRC:
     runs-on: ubuntu-latest
-    name: DRC report
+    name: DRC report 📟📟
     needs: setup_matrixs
     strategy:
       matrix:
@@ -130,7 +130,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: ERC report
+    name: ERC report ⚡⚡
     needs: setup_matrixs
     strategy:
       matrix:
@@ -186,7 +186,7 @@ jobs:
 
   production_job:
     runs-on: ubuntu-latest
-    name: creating production files bom sch gerbers 
+    name: creating production files bom sch gerbers 📂 
     needs: setup_matrixs
     strategy:
       matrix:
@@ -248,7 +248,7 @@ jobs:
 
   upload_job:
     runs-on: ubuntu-latest
-    name: commit production files
+    name: commit production files 
     if: ${{ always() }}
     needs: [DRC, ERC, production_job, setup_matrixs]
     steps:
