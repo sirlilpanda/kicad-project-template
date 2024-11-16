@@ -20,6 +20,9 @@ jobs:
         id: yaml
         with:
           config: ${{ github.workspace }}/project_settings.yaml
+      
+      - name: check setup
+        run: echo ${{steps.yaml.outputs.has_been_set_up}}
 
       - name: Setting up Python and chevron to processes failed reports
         # workflows really need some more work done on them
