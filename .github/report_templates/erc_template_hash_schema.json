@@ -7,6 +7,7 @@
     "sheets" : [
         {
             "name" : "string",
+            "name_md" : "just name but i replaced the spaces with hyphens",
             "number_of_errors" : "number",
             "number_of_warns" : "number",
             "warns" : [
