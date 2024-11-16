@@ -9,12 +9,12 @@ the design rule check found:
 {{#has_violations}}
 
 number of errors and warns breakdown per sheet:
-| error             | number of errors                       | number of warns                       |
-| ----------------- | -------------------------------------- | ------------------------------------- | 
-| violations        | {{violations.number_of_errors}}        | {{violations.number_of_warns}}        | 
-| unconnected items | {{unconnected_items.number_of_errors}} | {{unconnected_items.number_of_warns}} | 
-| schematic parity  | {{schematic_parity.number_of_errors}}  | {{schematic_parity.number_of_warns}}  |
-| total             |  {{total_errors}}                      | {{total_warns}}                       |
+| error                                   | number of errors                       | number of warns                       |
+| --------------------------------------- | -------------------------------------- | ------------------------------------- | 
+| [violations](#violations)               | {{violations.number_of_errors}}        | {{violations.number_of_warns}}        | 
+| [unconnected items](#unconnected-items) | {{unconnected_items.number_of_errors}} | {{unconnected_items.number_of_warns}} | 
+| [schematic parity](#schematic-parity)   | {{schematic_parity.number_of_errors}}  | {{schematic_parity.number_of_warns}}  |
+| total                                   | {{total_errors}}                       | {{total_warns}}                       |
 
 below is a more indepth breakdown of the errors and warns per error type.
 note you should only use this for quickly checking that the project
