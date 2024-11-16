@@ -121,9 +121,11 @@ jobs:
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+         ${{matrix.project_name}}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
       - name: upload report summary
+        if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
         
       # - name: upload report
@@ -181,9 +183,15 @@ jobs:
       
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
+        run: python \
+         ${{ github.workspace }}/.github/report_processing/process_json_reports.py \
+         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json \ 
+         ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} \
+         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md \
+         ${{matrix.project_name}}
 
       - name: upload report summary
+        if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
 
       # - name: upload report
@@ -253,7 +261,32 @@ jobs:
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
-     
+
+  ibom_job:
+    runs-on: ubuntu-latest
+    name: create iboms
+    needs: [setup_matrixs]
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
+
+      - name: Setting up Python for ibom=
+          # workflows really need some more work done on them
+        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
+
+        
+
+
   upload_job:
     runs-on: ubuntu-latest
     name: commit production files
