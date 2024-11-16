@@ -2,7 +2,7 @@ import sys
 import yaml
 from pathlib import Path
 
-
+# this just exists because i need a format for creating the matrixes
 def main():
     # "../project_settings.yaml"
     with open(Path(sys.argv[1])) as txt:
