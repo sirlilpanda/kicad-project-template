@@ -183,12 +183,7 @@ jobs:
       
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
-        run: python \
-         ${{ github.workspace }}/.github/report_processing/process_json_reports.py \
-         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json \ 
-         ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} \
-         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md \
-         ${{matrix.project_name}}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
 
       - name: upload report summary
         if: ${{ always() }}
@@ -276,7 +271,7 @@ jobs:
         with:
           yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-      - name: Setting up Python for ibom=
+      - name: Setting up Python for ibom
           # workflows really need some more work done on them
         if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
         uses: actions/setup-python@v5 
