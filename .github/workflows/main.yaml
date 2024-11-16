@@ -1,6 +1,6 @@
 on: 
-    push:
-        branches: [main, master, workflow_testing]
+  push:
+      branches: [main, master, workflow_testing]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,7 +11,6 @@ jobs:
   setup_new_project:
     runs-on: ubuntu-latest
     name: set up project 
-    if : ${{ github.repository != 'sirlilpanda/kicad-project-template' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,22 +23,22 @@ jobs:
 
       - name: Setting up Python and chevron to processes failed reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && !steps.yaml.outputs.has_been_set_up && github.repository != 'sirlilpanda/kicad-project-template'}} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
       
       - name: installing requirements  
-        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && !steps.yaml.outputs.has_been_set_up && github.repository != 'sirlilpanda/kicad-project-template'}} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
       
       - name: rename project if setup has not been completed
-        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && !steps.yaml.outputs.has_been_set_up && github.repository != 'sirlilpanda/kicad-project-template'}} 
         run: python ${{ github.workspace }}/.github/rename.py ${{github.event.repository.name}} 
 
       - name: commit production files
-        if: ${{ !cancelled() && steps.yaml.outputs.has_been_set_up}} 
+        if: ${{ !cancelled() && !steps.yaml.outputs.has_been_set_up && github.repository != 'sirlilpanda/kicad-project-template'}} 
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
@@ -52,10 +51,11 @@ jobs:
       projects: ${{ steps.projects.outputs.projects }}
     runs-on: ubuntu-latest
     name: matrix setup 🗓️
+    needs: setup_new_project
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-  
+
       - name: Setting up Python
         # workflows really need some more work done on them
         uses: actions/setup-python@v5 
@@ -70,7 +70,7 @@ jobs:
         id: projects
         run:
           python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
-  
+
   DRC:
     runs-on: ubuntu-latest
     name: DRC report 📟📟
@@ -115,18 +115,12 @@ jobs:
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-         ${{matrix.project_name}}
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
       - name: upload report summary
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
-        
-      # - name: upload report
-      #   uses: actions/upload-artifact@v4
-      #   with: 
-      #     name: drc-report-${{ matrix.project_name }}
-      #     path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_drc.md
+
 
   ERC:
     runs-on: ubuntu-latest
@@ -178,12 +172,6 @@ jobs:
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
 
-      # - name: upload report
-      #   uses: actions/upload-artifact@v4
-      #   with: 
-      #     name: erc-report-${{ matrix.project_name }}
-      #     path: ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/reports/${{ matrix.project_name }}_erc.md
-
   production_job:
     runs-on: ubuntu-latest
     name: creating production files bom sch gerbers 📂 
@@ -234,7 +222,7 @@ jobs:
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
-             
+            
 
       - name: upload report
         uses: actions/upload-artifact@v4
