@@ -65,15 +65,17 @@ def create_hash(filenames : list[str]) -> dict:
         else:
             readme_hash["projects"].append(report)
 
+    pprint(readme_hash)
 
     for project in readme_hash["projects"]:
         readme_hash["did_error"] |= not project["passing_erc"]
         readme_hash["did_error"] |= not project["passing_drc"]
-        project["passing_erc_emoji"] = "✅" if project["passing_erc"] else "❌" 
-        project["passing_drc_emoji"] = "✅" if project["passing_drc"] else "❌" 
+        project.setdefault("passing_erc_emoji", "✅" if project["passing_erc"] else "❌") 
+        project.setdefault("passing_drc_emoji", "✅" if project["passing_drc"] else "❌") 
 
     readme_hash["multiple_projects"] = True if len(readme_hash["projects"]) > 1 else None
 
+    pprint(readme_hash)
     return readme_hash
 
 def main():
