@@ -6,7 +6,7 @@ a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
 {{#projects}}
-| {{project_name}} | {{#passing_erc}}✅{{/passing_erc}}{{^passing_erc}}❌{{/passing_erc}}| {{#passing_drc}}✅{{/passing_drc}}{{^passing_drc}}❌{{/passing_drc}} | 
+| {{project_name}} | [{{#passing_erc}}✅{{/passing_erc}}{{^passing_erc}}❌{{/passing_erc}}]({{erc_summary_link}})| [{{#passing_drc}}✅{{/passing_drc}}{{^passing_drc}}❌{{/passing_drc}}]({{drc_summary_link}}) | 
 {{/projects}}
 
 for a quick guide check [project setup](#project-setup)
