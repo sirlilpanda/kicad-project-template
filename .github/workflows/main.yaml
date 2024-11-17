@@ -8,8 +8,8 @@ concurrency:
 
 
 env:
-  ERC_JOB_NAME : ⚡ERC report⚡
-  DRC_JOB_NAME : 📟 DRC report 📟
+  ERC_JOB_NAME : "⚡ERC report⚡"
+  DRC_JOB_NAME : "📟 DRC report 📟"
 
 
 jobs:
@@ -82,7 +82,7 @@ jobs:
 
   DRC:
     runs-on: ubuntu-latest
-    name: ${{github.env.DRC_JOB_NAME}}
+    name: "📟 DRC report 📟"
     needs: setup_matrixs
     strategy:
       matrix:
@@ -142,7 +142,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: ${{github.env.ERC_JOB_NAME}}
+    name: "⚡ERC report⚡"
     needs: setup_matrixs
     strategy:
       matrix:
@@ -203,7 +203,7 @@ jobs:
       #   shell: bash
 
       - name: echo job name
-        run: echo "${{github.env.ERC_JOB_NAME}} (${{matrix.project_name}})"
+        run: echo "${{env.ERC_JOB_NAME}} (${{matrix.project_name}})"
 
       - name: create files to upload
         run: |
