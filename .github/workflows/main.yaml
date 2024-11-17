@@ -77,7 +77,7 @@ jobs:
 
   DRC:
     runs-on: ubuntu-latest
-    name: DRC report 📟📟
+    name: 📟 DRC report 📟
     needs: setup_matrixs
     strategy:
       matrix:
@@ -137,7 +137,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: ERC report ⚡⚡
+    name: ⚡ERC report⚡
     needs: setup_matrixs
     strategy:
       matrix:
@@ -186,7 +186,7 @@ jobs:
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
       
       - name: testing
-        run: echo ${{github.job}}
+        run: echo ${{github.job.id}}
 
       - name: create files to upload
         run: |
