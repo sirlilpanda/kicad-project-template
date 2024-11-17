@@ -52,6 +52,7 @@ contained in this template are:
     - `workflows/` : this is where the github actions are kept
         - `main.yaml` : the main github action that will auto generate all files required and run DRC and ERC
     - `rename.py` : the script for renaming the project
+    - `get_pcb_names.py` : the script for getting all the kicad project names to use for the matrix
 - `Hardware/` : this is where the kicad project lives
     - `template_DOCS/` : all the documents related to your project is stored
         - `BOM/`     : where the bill of materials and price breakdown are kept
@@ -76,10 +77,12 @@ there are currently very few project settings that can be changed (will will be 
 |has_been_set_up            | a flag to tell the setup action if the project has been set up    | 
 |project_name               | the name of the project, this will be set to the name of the repo |
 |production_formats         | the output production format for the PCBs                         |
+|dynamic_read_me            | allow the readme to be updated using the given template           |
 |sub_pcb_names              | the names of all other kicad projects within the repo             |
 |bom_template_path          | the template used to write the bom report files                   |
 |erc_report_template_path   | the template used to write the erc report files                   |
 |drc_report_template_path   | the template used to write the drc report files                   |
+|readme_template_path       | the template used to write projects readme                        |
 
 
 ## project setup
