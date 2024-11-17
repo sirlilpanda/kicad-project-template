@@ -204,7 +204,6 @@ jobs:
 
       - name: echo job name
         run: |
-          echo "${{env.ERC_JOB_NAME}} (${{matrix.project_name}})"
           echo "${{github.jobs.ERC.name}}"
 
       - name: create files to upload
