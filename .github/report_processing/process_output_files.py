@@ -61,6 +61,7 @@ def create_hash(filenames : list[str]) -> dict:
             if project["project_name"] == report["project_name"]:
                 for key in report.keys():
                     project.setdefault(key, report[key])
+                break
         else:
             readme_hash["projects"].append(report)
 
