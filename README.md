@@ -1,10 +1,10 @@
-# template
+# kicad project template
 [![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
 
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878570376/attempts/1#summary-33099404562)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878570376/attempts/1#summary-33099404643) | 
+| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878588644/attempts/1#summary-33099445877)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878588644/attempts/1#summary-33099445997) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -15,7 +15,7 @@ This is a simple project template for new kicad projects. This template has some
 - [schematic pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/template_schematic.pdf)
 
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878570376). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878588644). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
