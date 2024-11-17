@@ -186,7 +186,7 @@ jobs:
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
       
       - name: testing
-        run: echo ${{github.job.id}}
+        run: echo ${{github.job.container.id}}
 
       - name: create files to upload
         run: |
