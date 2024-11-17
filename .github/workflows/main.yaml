@@ -187,15 +187,15 @@ jobs:
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
       
-      - name: get summary url
-        id: exp
-        uses: pl-strflt/job-summary-url-action@v1
-        with:
-          job: ${{github.job.id}}
+      # - name: get summary url
+      #   id: exp
+      #   uses: pl-strflt/job-summary-url-action@v1
+      #   with:
+      #     job: ${{github.job.id}}
 
-      - name: print summary url
-        run: echo '${{ steps.exp.outputs.job_summary_url }}'
-        shell: bash
+      # - name: print summary url
+      #   run: echo '${{ steps.exp.outputs.job_summary_url }}'
+      #   shell: bash
 
       - name: echo job name
         run: echo ${{github.job.id}}
