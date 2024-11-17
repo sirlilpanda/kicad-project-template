@@ -124,6 +124,16 @@ jobs:
       - name: upload report summary
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
+      
+      - name: create files to upload
+        run: |
+          echo "\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\"" >> ${{matrix.project_name}}_drc.output
+        
+      - name: upload data for readme updating
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.project_name}}_drc.output
+          path: ${{matrix.project_name}}_drc.output
 
   ERC:
     runs-on: ubuntu-latest
@@ -174,6 +184,16 @@ jobs:
       - name: upload report summary
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
+      
+      - name: create files to upload
+        run: |
+          echo "\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\"" >> ${{matrix.project_name}}_erc.output
+        
+      - name: upload data for readme updating
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.project_name}}_erc.output
+          path: ${{matrix.project_name}}_erc.output
 
   production_job:
     runs-on: ubuntu-latest
@@ -248,6 +268,18 @@ jobs:
 
       - name: testing
         run: echo ${{ github.repository }}
+
+      - name: download ercs files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_erc.output"
+          path: ${{ github.workspace }}
+      
+      - name: download drcs files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_drc.output"
+          path: ${{ github.workspace }}
 
   upload_job:
     runs-on: ubuntu-latest
