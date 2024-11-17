@@ -127,7 +127,7 @@ jobs:
       
       - name: create files to upload
         run: |
-          echo "\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\"" >> ${{matrix.project_name}}_drc.output
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_drc.output
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -187,7 +187,7 @@ jobs:
       
       - name: create files to upload
         run: |
-          echo "\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\"" >> ${{matrix.project_name}}_erc.output
+          echo "{\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_erc.output
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -281,6 +281,10 @@ jobs:
           pattern: "*_drc.output"
           path: ${{ github.workspace }}
 
+      - name: list everything
+        run: ls -R
+  
+
   upload_job:
     runs-on: ubuntu-latest
     name: commit production files 
@@ -312,19 +316,19 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             
-      - name: commit production files
-        uses: EndBug/add-and-commit@v9
-        with:
-            default_author: github_actions
-            message: 'production files'
-            push: true
-            pull: '--rebase --autostash'
-            tag_push: '--force' # just makes life easier
-            tag: 'v1.0.0 --force'
-            add: |
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
-              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
+      # - name: commit production files
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #       default_author: github_actions
+      #       message: 'production files'
+      #       push: true
+      #       pull: '--rebase --autostash'
+      #       tag_push: '--force' # just makes life easier
+      #       tag: 'v1.0.0 --force'
+      #       add: |
+      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
+      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
+      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
+      #         ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
       - name: list everything
         run: ls -R
