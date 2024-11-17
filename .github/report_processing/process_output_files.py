@@ -3,6 +3,7 @@ import sys
 import datetime
 import json
 import glob
+from pathlib import Path
 
 from pprint import pprint
 
@@ -34,7 +35,7 @@ from pprint import pprint
 EXTRAS_FILENAME = "readme_extras.json"
 
 def load_json_file(filename : str) -> dict:
-    with open(filename, "r") as js:
+    with open(Path(f"{filename}/{filename}"), "r") as js:
         return json.loads(js.read())
 
 def create_hash(filenames : list[str]) -> dict:
