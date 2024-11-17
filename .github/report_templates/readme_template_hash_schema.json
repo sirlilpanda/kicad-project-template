@@ -10,10 +10,10 @@
             "project_link" : "link",
             "passing_erc" : "bool",
             "passing_drc" : "bool",
-            "gerber_link" : "link",
-            "schematic_link" : "link",
-            "bom_report_link" : "link",
-            "bom_csv_link" : "link"
+            "gerber_link" : "link",         # all of these can be hardcoded
+            "schematic_link" : "link",      # all of these can be hardcoded
+            "bom_report_link" : "link",     # all of these can be hardcoded
+            "bom_csv_link" : "link"         # all of these can be hardcoded
         }
     ]
 }
