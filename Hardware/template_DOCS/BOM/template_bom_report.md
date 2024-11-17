@@ -1,6 +1,6 @@
 # 📄 BOM for template_bill_of_material 📄
 
-report created at 10:45:56.753383 on 17-11-2024.
+report created at 10:50:06.702823 on 17-11-2024.
 
 template_bill_of_material has a total of 3 parts with a cost of $0.
 

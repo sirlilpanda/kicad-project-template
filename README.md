@@ -4,8 +4,8 @@
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| power-board | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098583053)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098583126) | 
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098582767)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098582879) | 
+| power-board | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878219057/attempts/1#summary-33098634195)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878219057/attempts/1#summary-33098634261) | 
+| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878219057/attempts/1#summary-33098634005)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878219057/attempts/1#summary-33098634084) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -17,7 +17,7 @@ This is a simple project template for new kicad projects. This template has some
 | [power-board](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/power-board_PROJECT) | [power-board_schematic.pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/power-board_schematic.pdf) | [power-board_bill_of_materials.csv](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/power-board_bill_of_materials.csv) | [power-board_bom_report.md](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/power-board_bom_report.md) | [power-board_grbr.zip](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PCB/power-board_grbr.zip) |
 | [template](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PROJECT) | [template_schematic.pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/template_schematic.pdf) | [template_bill_of_materials.csv](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/template_bill_of_materials.csv) | [template_bom_report.md](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/template_bom_report.md) | [template_grbr.zip](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PCB/template_grbr.zip) |
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878219057). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
@@ -40,6 +40,7 @@ contained in this template are:
     - `workflows/` : this is where the github actions are kept
         - `main.yaml` : the main github action that will auto generate all files required and run DRC and ERC
     - `rename.py` : the script for renaming the project
+    - `get_pcb_names.py` : the script for getting all the kicad project names to use for the matrix
 - `Hardware/` : this is where the kicad project lives
     - `template_DOCS/` : all the documents related to your project is stored
         - `BOM/`     : where the bill of materials and price breakdown are kept
@@ -64,10 +65,12 @@ there are currently very few project settings that can be changed (will will be 
 |has_been_set_up            | a flag to tell the setup action if the project has been set up    | 
 |project_name               | the name of the project, this will be set to the name of the repo |
 |production_formats         | the output production format for the PCBs                         |
+|dynamic_read_me            | allow the readme to be updated using the given template           |
 |sub_pcb_names              | the names of all other kicad projects within the repo             |
 |bom_template_path          | the template used to write the bom report files                   |
 |erc_report_template_path   | the template used to write the erc report files                   |
 |drc_report_template_path   | the template used to write the drc report files                   |
+|readme_template_path       | the template used to write projects readme                        |
 
 
 ## project setup
