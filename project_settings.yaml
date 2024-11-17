@@ -33,8 +33,10 @@ production_formats: gerber
 
 # these templates use mustache (https://mustache.github.io/mustache.5.html)
 # a logic less templating langauge for templating just about anything
-bom_template_path: .github/report_templates/bom_template.mustache
+bom_template_path: .github/report_templates/bom_report_template.mustache
 
 erc_report_template_path: .github/report_templates/erc_report_template.mustache
 
 drc_report_template_path: .github/report_templates/drc_report_template.mustache
+
+readme_template: .github/report_templates/readme.mustache
