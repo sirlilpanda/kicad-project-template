@@ -1,0 +1,19 @@
+{
+    "badge" : "the ci badge",
+    "lastest_action_run_link" : "link to the lastest action",
+    "did_error" : "to check if errors occured in the pipeline",
+    "title" : "the tiltle of the project, can be set in project_settings or it will use the repo name",
+    "multiple_projects" : "bool",
+    "projects" : [
+        {
+            "project_name" : "string",
+            "project_link" : "link",
+            "passing_erc" : "bool",
+            "passing_drc" : "bool",
+            "gerber_link" : "link",
+            "schematic_link" : "link",
+            "bom_report_link" : "link",
+            "bom_csv_link" : "link"
+        }
+    ]
+}
