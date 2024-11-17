@@ -363,6 +363,13 @@ jobs:
         run: 
           python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template}} *.json
 
+      - name: upload data for readme updating
+        if: ${{always()}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: README.md
+          path: README.md
+
       - name: list everything
         run: ls -R
   
