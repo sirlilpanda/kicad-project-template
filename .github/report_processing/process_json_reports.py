@@ -33,7 +33,7 @@ def load_report(filename : str, project_name : str) -> dict:
     
     out_dict.setdefault(
         "has_violations",
-        True if out_dict["total_warns"] + out_dict["total_errors"] else False
+        True if out_dict["total_warns"] + out_dict["total_errors"] else None
     )
 
     return out_dict

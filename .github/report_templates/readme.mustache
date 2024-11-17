@@ -1,21 +1,59 @@
-# kicad project template
-[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
+{{! hash schema  }}
+{{! {
+    "badge" : "the ci badge",
+    "lastest_action_run_link" : "link to the lastest action",
+    "did_error" : "to check if errors occured in the pipeline",
+    "title" : "the tiltle of the project, can be set in project_settings or it will use the repo name",
+    "multiple_projects" : "bool",
+    "projects" : [
+        {
+            "project_name" : "string",
+            "project_link" : "link",
+            "passing_erc" : "bool",
+            "passing_erc_emoji" : "string",
+            "erc_summary_link" : "link",
+            "passing_drc" : "bool",
+            "passing_drc_emoji" : "string",
+            "drc_summary_link" : "link",
+            "gerber_link" : "link",
+            "schematic_link" : "link",
+            "bom_report_link" : "link",
+            "bom_csv_link" : "link"
+        }
+    ]
+} }}
+# kicad project {{title}}
+{{badge}}
+{{! [![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml) }}
 
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619/attempts/1#summary-33099593682)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619/attempts/1#summary-33099593778) | 
+{{#projects}}
+| {{project_name}} | [{{passing_erc_emoji}}]({{erc_summary_link}})| [{{passing_drc_emoji}}]({{drc_summary_link}}) | 
+{{/projects}}
 
 for a quick guide check [project setup](#project-setup)
 
 This is a simple project template for new kicad projects. This template has some basic setup already completed such as workflows for auto creating all the things you forget when creating a kicad project such as:
 
-- [gerbers](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PCB/template_grbr.zip)
-- [bom](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/template_bom_report.md)
-- [schematic pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/template_schematic.pdf)
+{{^multiple_projects}}
+{{#projects}}
+- [gerbers]({{gerber_link}})
+- [bom]({{bom_report_link}})
+- [schematic pdf]({{schematic_link}})
+{{/projects}}
+{{/multiple_projects}}
 
+{{#multiple_projects}}
+| project_name | schematic | bom | bom report | gerbers |
+| ------------ | --------- | --- | ---------- | ------- |
+{{#projects}}
+| [{{project_name}}]({{project_link}}) | [{{project_name}}_schematic.pdf]({{schematic_link}}) | [{{project_name}}_bill_of_materials.csv]({{bom_csv_link}}) | [{{project_name}}_bom_report.md]({{bom_report_link}}) | [{{project_name}}_grbr.zip]({{gerber_link}}) |
+{{/projects}}
+{{/multiple_projects}}
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab]({{lastest_action_run_link}}). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 

@@ -22,7 +22,6 @@ project_name: template
 #   - template_2
 # ========================================================
 sub_pcb_names: 
-  null
 
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
@@ -33,8 +32,13 @@ production_formats: gerber
 
 # these templates use mustache (https://mustache.github.io/mustache.5.html)
 # a logic less templating langauge for templating just about anything
-bom_template_path: .github/report_templates/bom_template.mustache
+bom_template_path: .github/report_templates/bom_report_template.mustache
 
 erc_report_template_path: .github/report_templates/erc_report_template.mustache
 
 drc_report_template_path: .github/report_templates/drc_report_template.mustache
+
+readme_template_path: .github/report_templates/readme.mustache
+
+# allow the readme to be auto updated using the readme template
+dynamic_read_me: true
