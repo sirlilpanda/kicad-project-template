@@ -119,6 +119,7 @@ jobs:
           pcb_drc_file: drc.json
       
       - name: creating DRC report in markdown
+        if: ${{ always() }}
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
       - name: upload report summary
@@ -184,10 +185,9 @@ jobs:
           sch_erc_file: erc.json   
       
       - name: creating ERC report in markdown
+        if: ${{ always() }}
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
       
-        
-        
       - name: upload report summary
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
