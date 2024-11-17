@@ -119,7 +119,7 @@ jobs:
       
       - name: creating DRC report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
       - name: upload report summary
         if: ${{ always() }}
@@ -127,13 +127,13 @@ jobs:
       
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_drc.output
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_drc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.project_name}}_drc.output
-          path: ${{matrix.project_name}}_drc.output
+          name: ${{matrix.project_name}}_drc.json
+          path: ${{matrix.project_name}}_drc.json
 
   ERC:
     runs-on: ubuntu-latest
@@ -187,13 +187,13 @@ jobs:
       
       - name: create files to upload
         run: |
-          echo "{\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_erc.output
+          echo "{\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_erc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.project_name}}_erc.output
-          path: ${{matrix.project_name}}_erc.output
+          name: ${{matrix.project_name}}_erc.json
+          path: ${{matrix.project_name}}_erc.json
 
   production_job:
     runs-on: ubuntu-latest
@@ -272,13 +272,13 @@ jobs:
       - name: download ercs files
         uses: actions/download-artifact@v4
         with:
-          pattern: "*_erc.output"
+          pattern: "*_erc.json"
           path: ${{ github.workspace }}
       
       - name: download drcs files
         uses: actions/download-artifact@v4
         with:
-          pattern: "*_drc.output"
+          pattern: "*_drc.json"
           path: ${{ github.workspace }}
 
       - name: list everything
