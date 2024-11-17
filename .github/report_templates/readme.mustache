@@ -1,3 +1,27 @@
+{{! hash schema  }}
+{{! {
+    "badge" : "the ci badge",
+    "lastest_action_run_link" : "link to the lastest action",
+    "did_error" : "to check if errors occured in the pipeline",
+    "title" : "the tiltle of the project, can be set in project_settings or it will use the repo name",
+    "multiple_projects" : "bool",
+    "projects" : [
+        {
+            "project_name" : "string",
+            "project_link" : "link",
+            "passing_erc" : "bool",
+            "passing_erc_emoji" : "string",
+            "erc_summary_link" : "link",
+            "passing_drc" : "bool",
+            "passing_drc_emoji" : "string",
+            "drc_summary_link" : "link",
+            "gerber_link" : "link",
+            "schematic_link" : "link",
+            "bom_report_link" : "link",
+            "bom_csv_link" : "link"
+        }
+    ]
+} }}
 # {{title}}
 {{badge}}
 {{! [![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml) }}
@@ -117,5 +141,8 @@ where the action can not commit the changes due to not having permissions follow
 
 this should fix the problem if not, go harass stack overflow they need it
 
+## editing the readme
+
+As this repo can and will automatically update the repo corresponding to the given readme template. If you dont want to use this you can always disable this by setting the `dynamic_read_me` to `false`. but if you want some very cool features like auto updating tables to show what projects are passing the rules check or simple links to parts of your directory. then have a look at the template readme and learn [mustache](https://mustache.github.io/)
 
 ## improvements
