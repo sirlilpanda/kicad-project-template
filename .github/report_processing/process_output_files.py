@@ -42,8 +42,10 @@ def create_hash(filenames : list[str]) -> dict:
     report_outs = filenames
     report_outs.remove("readme_extras.json")
 
-    extras = load_json_file("readme_extras.json")
-
+    extras = {}
+    with open("readme_extras.json", "r") as js:
+        extras = json.loads(js.read())
+    
     reports_dicts : list[dict] = []
     for report_name in report_outs:
         reports_dicts.append(load_json_file(report_name))
