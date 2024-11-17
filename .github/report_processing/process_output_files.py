@@ -67,20 +67,25 @@ def create_hash(filenames : list[str]) -> dict:
 
     pprint(readme_hash)    
 
+    for project in readme_hash["projects"]:
+        readme_hash["did_error"] |= not project["passing_erc"]
+        readme_hash["did_error"] |= not project["passing_drc"]
+
+    readme_hash["multiple_projects"] = True if len(readme_hash["projects"]) > 1 else False
+
+    return readme_hash
 
 def main():
     print(sys.argv)
 
     readme_template, *args = sys.argv[1:]
 
-
-
     report_hash = create_hash(args)
 
     with open(readme_template, "r") as txt:
         out = chevron.render(txt.read(), report_hash)
-        # with open("README.md", "w") as md:
-        #     md.write(out)
+        with open("README.md", "w") as md:
+            md.write(out)
 
 if __name__ == "__main__":
     main()
