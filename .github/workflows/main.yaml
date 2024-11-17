@@ -7,6 +7,11 @@ concurrency:
   cancel-in-progress: true
 
 
+env:
+  ERC_JOB_NAME : ⚡ERC report⚡
+  DRC_JOB_NAME : 📟 DRC report 📟
+
+
 jobs:
   setup_new_project:
     runs-on: ubuntu-latest
@@ -77,7 +82,7 @@ jobs:
 
   DRC:
     runs-on: ubuntu-latest
-    name: 📟 DRC report 📟
+    name: ${{github.env.DRC_JOB_NAME}}
     needs: setup_matrixs
     strategy:
       matrix:
@@ -137,7 +142,7 @@ jobs:
 
   ERC:
     runs-on: ubuntu-latest
-    name: ⚡ERC report⚡
+    name: ${{github.env.ERC_JOB_NAME}}
     needs: setup_matrixs
     strategy:
       matrix:
@@ -198,7 +203,7 @@ jobs:
       #   shell: bash
 
       - name: echo job name
-        run: echo ${{github.job.name}}
+        run: echo "${{github.env.ERC_JOB_NAME}} (${{matrix.project_name}})"
 
       - name: create files to upload
         run: |
