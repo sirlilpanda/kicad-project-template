@@ -62,7 +62,7 @@ def create_hash(filenames : list[str]) -> dict:
                 for key in report.keys():
                     project.setdefault(key, report[key])
         else:
-            project.append(report)
+            readme_hash["projects"].append(report)
 
     pprint(readme_hash)    
 
