@@ -322,33 +322,38 @@ jobs:
           yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: download ercs files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         uses: actions/download-artifact@v4
         with:
           pattern: "*_erc.json"
           path: ${{ github.workspace }}
       
       - name: download drcs files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         uses: actions/download-artifact@v4
         with:
           pattern: "*_drc.json"
           path: ${{ github.workspace }}
 
       - name: download production json files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         uses: actions/download-artifact@v4
         with:
           pattern: "*_project.json"
           path: ${{ github.workspace }}
 
       - name: Setting up Python
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
       - name: installing requirements  
-        if: ${{ !cancelled() }} 
+        if: ${{ !cancelled() && steps.yaml.outputs.dynamic_read_me == 'true' }}
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: create extra info for readme hash
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         run: |
           echo "{" >> readme_extras.json
           echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg?branch=${{github.ref_name}})](https://github.com/${{github.repository}}/tree/${{github.ref_name}}/actions/workflows/main.yaml)\"," >> readme_extras.json
@@ -360,17 +365,19 @@ jobs:
           cat readme_extras.json
 
       - name: create new readme
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         run: 
           python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template}} *.json
 
       - name: upload data for readme updating
-        if: ${{always()}}
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: README.md
           path: README.md
 
       - name: list everything
+        if: ${{always()}}
         run: ls -R
   
 
