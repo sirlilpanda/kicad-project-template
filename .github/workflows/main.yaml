@@ -198,7 +198,7 @@ jobs:
       #   shell: bash
 
       - name: echo job name
-        run: echo ${{github.job.id}}
+        run: echo ${{github.job}}
 
       - name: create files to upload
         run: |
