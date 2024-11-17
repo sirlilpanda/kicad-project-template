@@ -180,13 +180,17 @@ jobs:
       - name: creating ERC report in markdown
         if: ${{ !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
-
+      
+        
+        
       - name: upload report summary
         if: ${{ always() }}
-        run: |
-          cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
-          echo "job id: ${{github.job.container.id}}"
-          echo "job id: ${{github.job.container}}"
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
+      
+      - id: exp
+        uses: pl-strflt/job-summary-url-action@v1
+      - run: echo '${{ steps.exp.outputs.job_summary_url }}'
+        shell: bash
 
       - name: create files to upload
         run: |
