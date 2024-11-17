@@ -398,7 +398,7 @@ jobs:
       - name: download readme
         uses: actions/download-artifact@v4
         with:
-          pattern: README.md
+          name: README.md
           path: ${{ github.workspace }}
   
       - name: check downloads
