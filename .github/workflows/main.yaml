@@ -355,6 +355,9 @@ jobs:
           echo "\"lastest_action_run_link\" : \"https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}\"," >> readme_extras.json
           echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\""
           echo "}" >> readme_extras.json
+      - name: show extras
+        run: 
+          cat readme_extras.json
 
       - name: create new readme
         run: 
