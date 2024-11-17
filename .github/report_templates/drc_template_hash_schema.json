@@ -4,6 +4,7 @@
     "time" : "the time of creation",
     "total_warns" : "number",
     "total_errors" : "number",
+    "has_violations" : "flag to say if the project has a violation",
     "violations" : {
         "number_of_errors" : "number",
         "number_of_warns" : "number",
