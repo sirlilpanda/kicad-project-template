@@ -101,20 +101,17 @@ jobs:
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() }} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() }} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Run KiCad DRC
         id: drc
         uses: sparkengineering/kicad-action@v3
-        if: '!cancelled()'
         with:
           kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
           pcb_drc: true
@@ -122,7 +119,6 @@ jobs:
           pcb_drc_file: drc.json
       
       - name: creating DRC report in markdown
-        if: ${{ !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
       - name: upload report summary
@@ -170,20 +166,17 @@ jobs:
 
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
-        if: ${{ !cancelled() }} 
         uses: actions/setup-python@v5 
         with:
             python-version: '3.10'
             cache: 'pip'
         
       - name: installing requirements  
-        if: ${{ !cancelled() }} 
         run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
       - name: Run KiCad ERC
         id: erc
         uses: sparkengineering/kicad-action@v3
-        if: '!cancelled()'
         with:
           kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
           sch_erc: true
@@ -191,7 +184,6 @@ jobs:
           sch_erc_file: erc.json   
       
       - name: creating ERC report in markdown
-        if: ${{ !cancelled() }} 
         run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
       
         
