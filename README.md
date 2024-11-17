@@ -1,11 +1,11 @@
 # template
-[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/actions/workflows/main.yaml)
+[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
 
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| power-board | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878178493/attempts/1#summary-33098543572)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878178493/attempts/1#summary-33098543394) | 
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878178493/attempts/1#summary-33098543216)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878178493/attempts/1#summary-33098543125) | 
+| power-board | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098583053)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098583126) | 
+| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098582767)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777/attempts/1#summary-33098582879) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -17,7 +17,7 @@ This is a simple project template for new kicad projects. This template has some
 | [power-board](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/power-board_PROJECT) | [power-board_schematic.pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/power-board_schematic.pdf) | [power-board_bill_of_materials.csv](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/power-board_bill_of_materials.csv) | [power-board_bom_report.md](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/power-board_bom_report.md) | [power-board_grbr.zip](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PCB/power-board_grbr.zip) |
 | [template](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PROJECT) | [template_schematic.pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/template_schematic.pdf) | [template_bill_of_materials.csv](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/template_bill_of_materials.csv) | [template_bom_report.md](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/BOM/template_bom_report.md) | [template_grbr.zip](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_PCB/template_grbr.zip) |
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878178493). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878196777). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
