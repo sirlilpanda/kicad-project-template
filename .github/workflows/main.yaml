@@ -428,4 +428,5 @@ jobs:
               ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
               ${{ github.workspace }}/README.md
       - name: list everything
+        if: ${{always()}}
         run: ls -R
