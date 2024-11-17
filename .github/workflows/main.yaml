@@ -138,7 +138,7 @@ jobs:
 
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -210,7 +210,7 @@ jobs:
 
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
+          echo "{\"passing_drc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -280,6 +280,23 @@ jobs:
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
+      - name: data for readme updating
+        run: |
+          echo "{" >> ${{matrix.project_name}}_project.json
+          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
+          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
+          echo "\"project_link\":\"https://github.com/${{ github.repository }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
+          echo "\"project_name\":\"${{matrix.project_name}}\"" >> ${{matrix.project_name}}_project.json
+          echo "}" >> ${{matrix.project_name}}_project.json
+
+      - name: upload report
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ${{matrix.project_name}}_project.json
+          path: ${{matrix.project_name}}_project.json
+
   readme_job:
     runs-on: ubuntu-latest
     name: update readme
@@ -303,6 +320,18 @@ jobs:
         with:
           pattern: "*_drc.json"
           path: ${{ github.workspace }}
+
+      - name: download production json files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_project.json"
+          path: ${{ github.workspace }}
+
+      # - name: Setting up Python
+      #   uses: actions/setup-python@v5 
+      #   with:
+      #       python-version: '3.10'
+      #       cache: 'pip'
 
       - name: list everything
         run: ls -R
