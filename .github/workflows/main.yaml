@@ -130,9 +130,15 @@ jobs:
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
       
+      - name: get summary url
+        id: exp
+        uses: pl-strflt/job-summary-url-action@v1
+        with:
+          job: "${{env.DRC_JOB_NAME}} (${{matrix.project_name}})"
+
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_drc.json
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\""}" >> ${{matrix.project_name}}_drc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -204,7 +210,7 @@ jobs:
 
       - name: create files to upload
         run: |
-          echo "{\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_erc.json
+          echo "{\"passing_drc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\""}" >> ${{matrix.project_name}}_erc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
