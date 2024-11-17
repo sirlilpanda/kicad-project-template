@@ -216,7 +216,7 @@ jobs:
       - name: create files to upload
         if: ${{always()}}
         run: |
-          echo "{\"passing_drc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
+          echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
