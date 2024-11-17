@@ -53,10 +53,5 @@ def process_report(report : str) -> dict:
         out_dict["violations"]["number_of_warns"] +
         out_dict["schematic_parity"]["number_of_warns"]
     )
-
-    out_dict.setdefault(
-        "has_violations",
-        True if out_dict["total_warns"] + out_dict["total_errors"] else False
-    )
     
     return out_dict

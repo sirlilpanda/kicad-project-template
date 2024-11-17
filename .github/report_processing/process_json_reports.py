@@ -30,6 +30,11 @@ def load_report(filename : str, project_name : str) -> dict:
         "project_name",
         project_name
     )
+    
+    out_dict.setdefault(
+        "has_violations",
+        True if out_dict["total_warns"] + out_dict["total_errors"] else False
+    )
 
     return out_dict
 
