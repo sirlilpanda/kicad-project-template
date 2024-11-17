@@ -410,7 +410,6 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
             mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
-            mv ${{ github.workspace }}/README.md/README.md ${{ github.workspace }}/README.md
             
       - name: commit production files
         uses: EndBug/add-and-commit@v9
