@@ -191,11 +191,14 @@ jobs:
         id: exp
         uses: pl-strflt/job-summary-url-action@v1
         with:
-          job: ${{github.job.name}}
-          
+          job: ${{github.job.id}}
+
       - name: print summary url
         run: echo '${{ steps.exp.outputs.job_summary_url }}'
         shell: bash
+
+      - name: echo job name
+        run: echo ${{github.job.id}}
 
       - name: create files to upload
         run: |
