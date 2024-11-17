@@ -356,7 +356,7 @@ jobs:
         if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         run: |
           echo "{" >> readme_extras.json
-          echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg?branch=${{github.ref_name}})](https://github.com/${{github.repository}}/tree/${{github.ref_name}}/actions/workflows/main.yaml)\"," >> readme_extras.json
+          echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg?branch=${{github.ref_name}})](https://github.com/${{github.repository}}/actions/workflows/main.yaml)\"," >> readme_extras.json
           echo "\"lastest_action_run_link\" : \"https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}\"," >> readme_extras.json
           echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\"" >> readme_extras.json
           echo "}" >> readme_extras.json
