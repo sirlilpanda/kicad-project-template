@@ -11,7 +11,6 @@ env:
   ERC_JOB_NAME : "⚡ERC report⚡"
   DRC_JOB_NAME : "📟 DRC report 📟"
 
-
 jobs:
   setup_new_project:
     runs-on: ubuntu-latest
@@ -367,7 +366,7 @@ jobs:
       - name: create new readme
         if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
         run: 
-          python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template}} *.json
+          python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template_path}} *.json
 
       - name: upload data for readme updating
         if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
@@ -380,7 +379,6 @@ jobs:
         if: ${{always()}}
         run: ls -R
   
-
   upload_job:
     runs-on: ubuntu-latest
     name: commit production files 

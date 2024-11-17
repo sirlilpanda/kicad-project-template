@@ -39,7 +39,7 @@ erc_report_template_path: .github/report_templates/erc_report_template.mustache
 
 drc_report_template_path: .github/report_templates/drc_report_template.mustache
 
-readme_template: .github/report_templates/readme.mustache
+readme_template_path: .github/report_templates/readme.mustache
 
 # allow the readme to be auto updated using the readme template
 dynamic_read_me: true
