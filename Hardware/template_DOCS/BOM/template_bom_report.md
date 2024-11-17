@@ -1,6 +1,10 @@
 # 📄 BOM for template_bill_of_material 📄
 
+<<<<<<< HEAD
 report created at 11:51:47.973650 on 17-11-2024.
+=======
+report created at 04:52:02.879424 on 17-11-2024.
+>>>>>>> main
 
 template_bill_of_material has a total of 3 parts with a cost of $0.
 
