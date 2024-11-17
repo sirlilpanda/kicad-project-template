@@ -30,7 +30,7 @@ def main():
     print(f"{settings=}")
     rename_project(settings["project_name"], sys.argv[1])
     settings["project_name"] = sys.argv[1]
-    settings["has_been_set_up"] = True
+    settings["needs_setup"] = False
     # have to just print it out a rewrite over .project_settings because this guy
     # is dumb and doesnt just let you write these out to string
     with open(Path("project_settings.yaml"), "w", encoding=("utf-8")) as file:

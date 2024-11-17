@@ -1,4 +1,4 @@
-has_been_set_up: false
+needs_setup: true
 
 # this is set to the name of your repo during setup, you can change it later on using the rename tool
 project_name: template
