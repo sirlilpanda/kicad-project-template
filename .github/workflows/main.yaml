@@ -185,7 +185,8 @@ jobs:
         if: ${{ always() }}
         run: |
           cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
-          echo "job: ${{github.job}}"
+          echo "job id: ${{github.job.container.id}}"
+          echo "job id: ${{github.job.container}}"
 
       - name: create files to upload
         run: |
