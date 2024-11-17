@@ -351,9 +351,9 @@ jobs:
       - name: create extra info for readme hash
         run: |
           echo "{" >> readme_extras.json
-          echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg)](https://github.com/${{github.repository}}/actions/workflows/main.yaml)\," >> readme_extras.json
+          echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg)](https://github.com/${{github.repository}}/actions/workflows/main.yaml)\"," >> readme_extras.json
           echo "\"lastest_action_run_link\" : \"https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}\"," >> readme_extras.json
-          echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\""
+          echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\"" >> readme_extras.json
           echo "}" >> readme_extras.json
       - name: show extras
         run: 
