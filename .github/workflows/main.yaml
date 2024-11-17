@@ -125,7 +125,6 @@ jobs:
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
 
-
   ERC:
     runs-on: ubuntu-latest
     name: ERC report ⚡⚡
@@ -238,11 +237,23 @@ jobs:
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
+  readme_job:
+    runs-on: ubuntu-latest
+    name: update readme
+    if: ${{ always() }}
+    needs: [DRC, ERC, production_job]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: testing
+        uses: echo ${{ github.repository }}
+
   upload_job:
     runs-on: ubuntu-latest
     name: commit production files 
     if: ${{ always() }}
-    needs: [DRC, ERC, production_job, setup_matrixs]
+    needs: [DRC, ERC, production_job, readme_job]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
