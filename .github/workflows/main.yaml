@@ -138,7 +138,7 @@ jobs:
 
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\""}" >> ${{matrix.project_name}}_drc.json
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
@@ -210,7 +210,7 @@ jobs:
 
       - name: create files to upload
         run: |
-          echo "{\"passing_drc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\""}" >> ${{matrix.project_name}}_erc.json
+          echo "{\"passing_drc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
         
       - name: upload data for readme updating
         uses: actions/upload-artifact@v4
