@@ -54,7 +54,7 @@ def create_hash(filenames : list[str]) -> dict:
         **extras,
         "projects" : [],
         "did_error" : False,
-        "multiple_projects" : False
+        "multiple_projects" : None
     }
     for report in reports_dicts:
         for project in readme_hash["projects"]:
@@ -65,13 +65,14 @@ def create_hash(filenames : list[str]) -> dict:
         else:
             readme_hash["projects"].append(report)
 
-    pprint(readme_hash)    
 
     for project in readme_hash["projects"]:
         readme_hash["did_error"] |= not project["passing_erc"]
         readme_hash["did_error"] |= not project["passing_drc"]
+        if not project["passing_erc"]: project["passing_erc"] = None 
+        if not project["passing_drc"]: project["passing_drc"] = None 
 
-    readme_hash["multiple_projects"] = True if len(readme_hash["projects"]) > 1 else False
+    readme_hash["multiple_projects"] = True if len(readme_hash["projects"]) > 1 else None
 
     return readme_hash
 
