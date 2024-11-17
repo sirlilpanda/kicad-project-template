@@ -283,11 +283,11 @@ jobs:
       - name: data for readme updating
         run: |
           echo "{" >> ${{matrix.project_name}}_project.json
-          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
-          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
-          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
-          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
-          echo "\"project_link\":\"https://github.com/${{ github.repository }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
+          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
+          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
+          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
           echo "\"project_name\":\"${{matrix.project_name}}\"" >> ${{matrix.project_name}}_project.json
           echo "}" >> ${{matrix.project_name}}_project.json
 
