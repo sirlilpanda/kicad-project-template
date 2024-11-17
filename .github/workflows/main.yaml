@@ -185,6 +185,9 @@ jobs:
         if: ${{ always() }}
         run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
       
+      - name: testing
+        run: echo ${{github.job}}
+
       - name: create files to upload
         run: |
           echo "{\"passing_erc\":\"${{steps.erc.conclusion == 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\"}" >> ${{matrix.project_name}}_erc.json
