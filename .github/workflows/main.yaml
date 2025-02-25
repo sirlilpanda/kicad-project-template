@@ -81,7 +81,7 @@ jobs:
       - name: get kicad project names
         id: testing-projects
         run:
-          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "\'${0%.kicad_sch}\',"' {} \; >> temp.json
+          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "\"${0%.kicad_sch}\","' {} \; >> temp.json
           
       - name: creating list end
         run:
