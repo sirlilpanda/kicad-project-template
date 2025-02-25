@@ -89,7 +89,7 @@ jobs:
           
       - name: creating list end
         run:
-          echo temp.json
+          cat temp.json
   
       - name: creating list end
         run:
