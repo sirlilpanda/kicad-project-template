@@ -1,10 +1,6 @@
 # 📄 BOM for template_bill_of_material 📄
 
-<<<<<<< HEAD
-report created at 22:16:16.034715 on 25-02-2025.
-=======
-report created at 12:07:40.496753 on 17-11-2024.
->>>>>>> 505c96a (production files)
+report created at 22:37:22.085853 on 25-02-2025.
 
 template_bill_of_material has a total of 3 parts with a cost of $0.
 
