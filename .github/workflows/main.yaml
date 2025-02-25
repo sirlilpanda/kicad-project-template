@@ -73,7 +73,12 @@ jobs:
 
       - name: installing requirements  
         run: pip install pyyaml
-    
+          
+      - name: get kicad project names
+        id: testing-projects
+        run:
+          find py_testing/ -type f -name "*.py" -exec sh -c 'echo "${0%.py}"' {} \;
+
       - name: get kicad project names
         id: projects
         run:
