@@ -73,19 +73,16 @@ jobs:
 
       - name: installing requirements  
         run: pip install pyyaml
-      
-      - name: creating list start
-        run:
-          echo "[" >> "$GITHUB_OUTPUT"
 
       - name: get kicad project names
         id: testing-projects
         run:
-          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "${0%.kicad_sch},"' {} \; >> "$GITHUB_OUTPUT"
+          (
+          echo "[";
+          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "${0%.kicad_sch},"' {} \;;
+          echo "]"
+          ) >> "$GITHUB_OUTPUT"
 
-      - name: creating list end
-        run:
-          echo "]" >> "$GITHUB_OUTPUT"
       # - name: get kicad project names
       #   id: projects
       #   run:
