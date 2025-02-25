@@ -89,11 +89,11 @@ jobs:
           
       - name: creating list end
         run:
-          echo temp
+          echo temp.json
   
       - name: creating list end
         run:
-          echo temp >> "$GITHUB_OUTPUT"
+          echo temp.json >> "$GITHUB_OUTPUT"
 
 
 
