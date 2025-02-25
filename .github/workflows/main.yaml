@@ -93,7 +93,7 @@ jobs:
   
       - name: creating list end
         run:
-          echo temp.txt >> "$GITHUB_OUTPUT"
+          cat temp.txt >> "$GITHUB_OUTPUT"
 
 
 
