@@ -4,7 +4,7 @@
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619/attempts/1#summary-33099593682)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619/attempts/1#summary-33099593778) | 
+| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13532013919/attempts/1#summary-37816210665)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13532013919/attempts/1#summary-37816210138) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -15,7 +15,7 @@ This is a simple project template for new kicad projects. This template has some
 - [schematic pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/Hardware/template_DOCS/template_schematic.pdf)
 
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/11878649619). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13532013919). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
@@ -106,5 +106,5 @@ this should fix the problem if not, go harass stack overflow they need it
 ## editing the readme
 
 As this repo can and will automatically update the repo corresponding to the given readme template. If you dont want to use this you can always disable this by setting the `dynamic_read_me` to `false`. but if you want some very cool features like auto updating tables to show what projects are passing the rules check or simple links to parts of your directory. then have a look at the template readme and learn [mustache](https://mustache.github.io/)
- 
+
 ## improvements
