@@ -82,7 +82,7 @@ jobs:
       - name: get kicad project names
         id: projects
         run:
-          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml >> "$GITHUB_OUTPUT"
+          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml
 
   DRC:
     runs-on: ubuntu-latest
