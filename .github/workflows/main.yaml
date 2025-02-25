@@ -73,16 +73,23 @@ jobs:
 
       - name: installing requirements  
         run: pip install pyyaml
-          
+      
+      - name: creating list start
+        run:
+          echo "[" >> "$GITHUB_OUTPUT"
+
       - name: get kicad project names
         id: testing-projects
         run:
-          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "${0%.kicad_sch}"' {} \;
+          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "${0%.kicad_sch},"' {} \; >> "$GITHUB_OUTPUT"
 
-      - name: get kicad project names
-        id: projects
+      - name: creating list end
         run:
-          python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml
+          echo "]" >> "$GITHUB_OUTPUT"
+      # - name: get kicad project names
+      #   id: projects
+      #   run:
+      #     python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml 
 
   DRC:
     runs-on: ubuntu-latest
