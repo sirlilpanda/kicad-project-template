@@ -76,17 +76,21 @@ jobs:
       
       - name: creating list start
         run:
-          echo "[" >> temp.json
+          echo "projects=[" >> temp.json
 
       - name: get kicad project names
         id: testing-projects
         run:
-          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "${0%.kicad_sch},"' {} \; >> temp.json
+          find . -type f -name "*.kicad_sch" -exec sh -c 'echo "\'${0%.kicad_sch}\',"' {} \; >> temp.json
           
       - name: creating list end
         run:
           echo "]" >> temp.json
-
+          
+      - name: creating list end
+        run:
+          echo temp
+  
       - name: creating list end
         run:
           echo temp >> "$GITHUB_OUTPUT"
