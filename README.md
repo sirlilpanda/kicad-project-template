@@ -106,5 +106,5 @@ this should fix the problem if not, go harass stack overflow they need it
 ## editing the readme
 
 As this repo can and will automatically update the repo corresponding to the given readme template. If you dont want to use this you can always disable this by setting the `dynamic_read_me` to `false`. but if you want some very cool features like auto updating tables to show what projects are passing the rules check or simple links to parts of your directory. then have a look at the template readme and learn [mustache](https://mustache.github.io/)
-
+ 
 ## improvements
