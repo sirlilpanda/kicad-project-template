@@ -95,7 +95,11 @@ jobs:
         run:
           cat temp.txt >> "$GITHUB_OUTPUT"
 
-
+      - name: creating list end
+        run:
+          cat "$GITHUB_OUTPUT"
+  
+  
 
           # - name: get kicad project names
       #   id: projects
