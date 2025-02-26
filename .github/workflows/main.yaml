@@ -283,11 +283,11 @@ jobs:
           echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
       
       - name: setting env
-        run: 
-          echo "schematic_file=${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}/${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
-          echo "bill_of_materials_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
-          echo "production_format_file=${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}/${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
-          echo "bom_report_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
+        run: #                                                                                      | the / here is defined in the project settings
+          echo "schematic_file=${{steps.yaml.outputs.schematic_output_path}}${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
+          echo "bill_of_materials_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
+          echo "production_format_file=${{steps.yaml.outputs.production_file_output_path}}${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
+          echo "bom_report_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
   
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
@@ -315,17 +315,17 @@ jobs:
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{env.schematic_file}}
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{env.bill_of_materials_file}}
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{env.production_format_file}}
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{ github.workspace }}/${{env.schematic_file}}
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{ github.workspace }}/${{env.bill_of_materials_file}}
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{ github.workspace }}/${{env.production_format_file}}
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
         run: python 
           ${{ github.workspace }}/.github/report_processing/process_bom_files.py 
-          ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv 
+          ${{ github.workspace }}/${{env.bill_of_materials_file}}
           ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}}
-          ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bom_report.md
+          ${{ github.workspace }}/${{env.bom_report_file}}
             
 
       - name: upload report'
@@ -333,30 +333,29 @@ jobs:
         with: 
           name: production-files-${{env.PROJECT_NAME}}.zip
           path: |
-            ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bom_report.md
-            ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}/${{env.PROJECT_NAME}}_schematic.pdf
-            ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv
-            ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}/${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip
-
+            ${{ github.workspace }}/${{env.schematic_file}}
+            ${{ github.workspace }}/${{env.bill_of_materials_file}}
+            ${{ github.workspace }}/${{env.production_format_file}}
+            ${{ github.workspace }}/${{env.bom_report_file}}
 
       - name: data for readme updating
         if: ${{always()}}
         run: |
           echo "{" >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_path}}_schematic.pdf\"," >> ${{matrix.project_path}}_project.json
-          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_path}}_bill_of_materials.csv\"," >> ${{matrix.project_path}}_project.json
-          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_path }}_bom_report.md\"," >> ${{matrix.project_path}}_project.json
-          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_path}}_grbr.zip\"," >> ${{matrix.project_path}}_project.json
-          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_path}}_PROJECT\"," >> ${{matrix.project_path}}_project.json
-          echo "\"project_name\":\"${{matrix.project_path}}\"" >> ${{matrix.project_path}}_project.json
-          echo "}" >> ${{matrix.project_path}}_project.json
+          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.schematic_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
+          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.bill_of_materials_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
+          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.bom_report_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
+          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.production_format_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
+          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/$(dirname ${{matrix.project_path}})\"," >> ${{env.PROJECT_NAME}}_project.json
+          echo "\"project_name\":\"${{matrix.project_path}}\"" >> ${{env.PROJECT_NAME}}_project.json
+          echo "}" >> ${{env.PROJECT_NAME}}_project.json
 
       - name: upload report
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with: 
-          name: ${{matrix.project_path}}_project.json
-          path: ${{matrix.project_path}}_project.json
+          name: ${{env.PROJECT_NAME}}_project.json
+          path: ${{env.PROJECT_NAME}}_project.json
 
   readme_job:
     runs-on: ubuntu-latest
