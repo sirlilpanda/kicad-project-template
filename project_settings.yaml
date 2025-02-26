@@ -19,7 +19,7 @@ bom_report_output_path: docs/BOM/
 production_file_output_path: pcbs/
 
 # all names will follow the pattern [project_name]name.* 
-# these settings just define that name prefix
+# these settings just define that name suffix
 # the underscore here are purely for readablity of the
 # output files so the schematic output file name will be
 # project_name_schematic.pdf
