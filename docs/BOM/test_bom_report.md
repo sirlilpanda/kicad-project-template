@@ -1,6 +1,6 @@
 # 📄 BOM for test_bill_of_material 📄
 
-report created at 08:39:37.290693 on 26-02-2025.
+report created at 08:42:42.616748 on 26-02-2025.
 
 test_bill_of_material has a total of 3 parts with a cost of $0.
 
