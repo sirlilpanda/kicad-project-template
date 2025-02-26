@@ -217,7 +217,7 @@ jobs:
           kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
           report_format: json
-          sch_erc_file: ${{ matrix.project_path }}/erc.json
+          sch_erc_file: erc.json
       
       - name: tree
         run:
