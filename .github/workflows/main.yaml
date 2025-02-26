@@ -83,6 +83,10 @@ jobs:
         run:
           find . -type f -name "*.kicad_sch" -exec sh -c 'echo -n "\"${0%.kicad_sch}\","' {} \; >> temp.txt
           
+      - name: get rid of trailing comma
+        run:
+          cat temp.txt | sed 's/.\{1\}$//' > temp.txt
+
       - name: creating list end
         run:
           echo -n "]" >> temp.txt
