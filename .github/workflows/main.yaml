@@ -106,10 +106,10 @@ jobs:
     needs: setup_matrixs
     strategy:
       matrix:
-        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
+        project_path: $(basename ${{ fromJSON(needs.setup_matrixs.outputs.projects) }})
     steps:
       - name: check matrix
-        run: echo ${{ matrix.project_name }}
+        run: basename ${{ matrix.project_path }}
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -134,37 +134,42 @@ jobs:
         id: drc
         uses: sparkengineering/kicad-action@v3
         with:
-          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+          kicad_pcb: ${{ matrix.project_path }}.kicad_pcb
           pcb_drc: true
           report_format: json
           pcb_drc_file: drc.json
       
       - name: creating DRC report in markdown
         if: ${{ always() }}
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
+        run: python
+          ${{ github.workspace }}/.github/report_processing/process_json_reports.py 
+          ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/drc.json
+          ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}}
+          ${{ github.workspace }}/$(basename ${{ matrix.project_path }})_drc.md
+          $(basename ${{ matrix.project_path }})
       
       - name: upload report summary
         if: ${{ always() }}
-        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
+        run: cat ${{ github.workspace }}/$(basename ${{ matrix.project_path }})_drc.md >> $GITHUB_STEP_SUMMARY
       
       - name: get summary url
         if: ${{always()}}
         id: exp
         uses: pl-strflt/job-summary-url-action@v1
         with:
-          job: "${{env.DRC_JOB_NAME}} (${{matrix.project_name}})"
+          job: "${{env.DRC_JOB_NAME}} ($(basename ${{matrix.project_path}}))"
 
       - name: create files to upload
         if: ${{always()}}
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_path}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_path}}_drc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.project_name}}_drc.json
-          path: ${{matrix.project_name}}_drc.json
+          name: ${{matrix.project_path}}_drc.json
+          path: ${{matrix.project_path}}_drc.json
 
   ERC:
     runs-on: ubuntu-latest
@@ -175,7 +180,7 @@ jobs:
         project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
       - name: check matrix
-        run: echo ${{ matrix.project_name }}
+        run: echo ${{ matrix.project_path }}
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -200,25 +205,25 @@ jobs:
         id: erc
         uses: sparkengineering/kicad-action@v3
         with:
-          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
+          kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json   
       
       - name: creating ERC report in markdown
         if: ${{ always() }}
-        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_path}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_path }}_erc.md ${{matrix.project_path}}
       
       - name: upload report summary
         if: ${{ always() }}
-        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_path }}_erc.md >> $GITHUB_STEP_SUMMARY
       
       - name: get summary url
         if: ${{always()}}
         id: exp
         uses: pl-strflt/job-summary-url-action@v1
         with:
-          job: "${{env.ERC_JOB_NAME}} (${{matrix.project_name}})"
+          job: "${{env.ERC_JOB_NAME}} (${{matrix.project_path}})"
 
       - name: print summary url
         if: ${{always()}}
@@ -228,14 +233,14 @@ jobs:
       - name: create files to upload
         if: ${{always()}}
         run: |
-          echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
+          echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_path}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_path}}_erc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.project_name}}_erc.json
-          path: ${{matrix.project_name}}_erc.json
+          name: ${{matrix.project_path}}_erc.json
+          path: ${{matrix.project_path}}_erc.json
 
   production_job:
     runs-on: ubuntu-latest
@@ -271,52 +276,52 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         if: '!cancelled()'
         with:
-          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
+          kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+          kicad_pcb: ${{ matrix.project_path }}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
-            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_path}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_path}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_path}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_path}}_bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_path}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_path}}_grbr.zip
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
-        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_path}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_path }}_bom_report.md
             
 
       - name: upload report'
         uses: actions/upload-artifact@v4
         with: 
-          name: production-files-${{matrix.project_name}}.zip
+          name: production-files-${{matrix.project_path}}.zip
           path: |
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
-            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_path}}_schematic.pdf
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_path}}_bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_path }}_bom_report.md
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_path}}_grbr.zip
 
       - name: data for readme updating
         if: ${{always()}}
         run: |
-          echo "{" >> ${{matrix.project_name}}_project.json
-          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
-          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
-          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
-          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
-          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
-          echo "\"project_name\":\"${{matrix.project_name}}\"" >> ${{matrix.project_name}}_project.json
-          echo "}" >> ${{matrix.project_name}}_project.json
+          echo "{" >> ${{matrix.project_path}}_project.json
+          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_path}}_schematic.pdf\"," >> ${{matrix.project_path}}_project.json
+          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_path}}_bill_of_materials.csv\"," >> ${{matrix.project_path}}_project.json
+          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_path }}_bom_report.md\"," >> ${{matrix.project_path}}_project.json
+          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_path}}_grbr.zip\"," >> ${{matrix.project_path}}_project.json
+          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_path}}_PROJECT\"," >> ${{matrix.project_path}}_project.json
+          echo "\"project_name\":\"${{matrix.project_path}}\"" >> ${{matrix.project_path}}_project.json
+          echo "}" >> ${{matrix.project_path}}_project.json
 
       - name: upload report
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with: 
-          name: ${{matrix.project_name}}_project.json
-          path: ${{matrix.project_name}}_project.json
+          name: ${{matrix.project_path}}_project.json
+          path: ${{matrix.project_path}}_project.json
 
   readme_job:
     runs-on: ubuntu-latest
