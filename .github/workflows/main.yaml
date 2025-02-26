@@ -214,9 +214,8 @@ jobs:
         id: erc
         uses: sparkengineering/kicad-action@v3
         with:
-          kicad_pcb: ${{ matrix.project_path }}.kicad_sch
+          kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
-          sch_pdf: true
           report_format: json
           sch_erc_file: ${{ matrix.project_path }}/erc.json
       
