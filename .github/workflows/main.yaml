@@ -94,7 +94,7 @@ jobs:
 
       - name: creating list end
         run:
-          echo $output
+          echo "$output"
   
       - name: creating list end
         run:
