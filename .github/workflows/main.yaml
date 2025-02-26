@@ -279,8 +279,11 @@ jobs:
           yaml-file: ${{ github.workspace }}/project_settings.yaml
 
       - name: setting env
-        run: |
+        run: 
           echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
+      
+      - name: setting env
+        run: 
           echo "schematic_file=${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}/${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
           echo "bill_of_materials_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
           echo "production_format_file=${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}/${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
