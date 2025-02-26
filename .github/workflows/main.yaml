@@ -79,7 +79,6 @@ jobs:
           echo -n "projects=[" >> temp.txt
 
       - name: get kicad project names
-        id: testing-projects
         run:
           find . -type f -name "*.kicad_sch" -exec sh -c 'echo -n "\"${0%.kicad_sch}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
           
@@ -100,6 +99,7 @@ jobs:
           cat temp.txt
   
       - name: creating list end
+        id: projects
         run:
           cat temp.txt >> "$GITHUB_OUTPUT"
 
