@@ -1,10 +1,10 @@
 # kicad project template
-[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
+[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
 
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540300487/attempts/1#summary-37839704184)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540300487/attempts/1#summary-37839703753) | 
+| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540387140/attempts/1#summary-37839975243)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540387140/attempts/1#summary-37839974758) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -15,7 +15,7 @@ This is a simple project template for new kicad projects. This template has some
 - [schematic pdf](https://github.com/sirlilpanda/kicad-project-template/tree/workflow_testing/template_schematic.pdf)
 
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540300487). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13540387140). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
@@ -106,7 +106,6 @@ where the action can not commit the changes due to not having permissions follow
 ![alt text](res/image-3.png)
 
 this should fix the problem if not, go harass stack overflow they need it
-Once all of these steps have been followed the workflow should be passing, however the `README.md` will only update on the next push request.
 Once all of these steps have been followed the workflow should be passing, however the `README.md` will only update on the next push request.
 
 ## editing the readme
