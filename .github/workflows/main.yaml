@@ -143,7 +143,7 @@ jobs:
       - name: tree
         run:
           ls -R
-          
+
       - name: creating DRC report in markdown
         if: ${{ always() }}
         run: python
@@ -214,10 +214,10 @@ jobs:
         id: erc
         uses: sparkengineering/kicad-action@v3
         with:
-          kicad_pcb: ${{ github.workspace }}/${{ matrix.project_path }}.kicad_sch
+          kicad_pcb: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
           report_format: json
-          sch_erc_file: erc.json   
+          sch_erc_file: ${{ matrix.project_path }}/erc.json
       
       - name: tree
         run:
