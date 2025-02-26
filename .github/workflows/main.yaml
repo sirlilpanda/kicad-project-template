@@ -89,7 +89,7 @@ jobs:
 
       - name: creating list end
         run:
-          echo -n "]" >> temp.txt
+          echo "]" >> temp.txt
 
       - name: creating list end
         run:
