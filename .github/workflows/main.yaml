@@ -108,8 +108,14 @@ jobs:
       matrix:
         project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
+
       - name: check matrix
         run: basename ${{ matrix.project_path }}
+
+      - name: setting env
+        run:
+          echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
+
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -145,31 +151,31 @@ jobs:
           ${{ github.workspace }}/.github/report_processing/process_json_reports.py 
           ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/drc.json
           ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}}
-          ${{ github.workspace }}/$(basename ${{ matrix.project_path }})_drc.md
-          $(basename ${{ matrix.project_path }})
+          ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md
+          ${{ env.PROJECT_NAME }}
       
       - name: upload report summary
         if: ${{ always() }}
-        run: cat ${{ github.workspace }}/$(basename ${{ matrix.project_path }})_drc.md >> $GITHUB_STEP_SUMMARY
+        run: cat ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md >> $GITHUB_STEP_SUMMARY
       
       - name: get summary url
         if: ${{always()}}
         id: exp
         uses: pl-strflt/job-summary-url-action@v1
         with:
-          job: "${{env.DRC_JOB_NAME}} ($(basename ${{matrix.project_path}}))"
+          job: "${{env.DRC_JOB_NAME}} (${{matrix.project_path}})"
 
       - name: create files to upload
         if: ${{always()}}
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_path}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_path}}_drc.json
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{env.PROJECT_NAME}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{env.PROJECT_NAME}}_drc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.project_path}}_drc.json
-          path: ${{matrix.project_path}}_drc.json
+          name: ${{env.PROJECT_NAME}}_drc.json
+          path: ${{env.PROJECT_NAME}}_drc.json
 
   # ERC:
   #   runs-on: ubuntu-latest
