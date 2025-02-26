@@ -1,8 +1,8 @@
-# 📄 BOM for template_bill_of_material 📄
+# 📄 BOM for test_bill_of_material 📄
 
-report created at 08:04:00.640002 on 26-02-2025.
+report created at 08:03:58.409920 on 26-02-2025.
 
-template_bill_of_material has a total of 3 parts with a cost of $0.
+test_bill_of_material has a total of 3 parts with a cost of $0.
 
 | Reference | Value | Quantity | part number | cost |
 | --------- | ----- | -------- | ----------- | ---- |
