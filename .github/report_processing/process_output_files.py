@@ -68,13 +68,10 @@ def create_hash(filenames : list[str]) -> dict:
     pprint(readme_hash)
 
     for project in readme_hash["projects"]:
-        pprint(project)
-        # project : dict 
-        # project.setdefault
-        # readme_hash["did_error"] |= not project["passing_erc"]
-        # readme_hash["did_error"] |= not project["passing_drc"]
-        # project.setdefault("passing_erc_emoji", "✅" if project["passing_erc"] == "true" else "❌") 
-        # project.setdefault("passing_drc_emoji", "✅" if project["passing_drc"] == "true" else "❌") 
+        readme_hash["did_error"] |= not project["passing_erc"]
+        readme_hash["did_error"] |= not project["passing_drc"]
+        project.setdefault("passing_erc_emoji", "✅" if project["passing_erc"] == "true" else "❌") 
+        project.setdefault("passing_drc_emoji", "✅" if project["passing_drc"] == "true" else "❌") 
 
     readme_hash["multiple_projects"] = True if len(readme_hash["projects"]) > 1 else None
 
