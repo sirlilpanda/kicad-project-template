@@ -89,6 +89,10 @@ jobs:
 
       - name: creating list end
         run:
+          cat temp.txt 
+
+      - name: creating list end
+        run:
           echo "]" >> temp.txt
 
       - name: creating list end
