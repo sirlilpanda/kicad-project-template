@@ -94,11 +94,11 @@ jobs:
 
       - name: creating list end
         run:
-          cat output
+          echo $output
   
       - name: creating list end
         run:
-          cat projects=$output >> "$GITHUB_OUTPUT"
+          echo "projects=$output" >> "$GITHUB_OUTPUT"
 
           # - name: get kicad project names
       #   id: projects
