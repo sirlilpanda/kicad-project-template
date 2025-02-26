@@ -282,7 +282,7 @@ jobs:
         run: |
           echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
           echo "schematic_file=${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}/${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
-          echo "_bill_of_materials_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
+          echo "bill_of_materials_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
           echo "production_format_file=${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}/${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
           echo "bom_report_file=${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
   
@@ -312,9 +312,9 @@ jobs:
       - name: Moving production files to correct location
         if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
         run: |  
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}/${{env.PROJECT_NAME}}_schematic.pdf
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}/${{env.PROJECT_NAME}}_bill_of_materials.csv
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}/${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{env.schematic_file}}
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{env.bill_of_materials_file}}
+            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{env.production_format_file}}
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
