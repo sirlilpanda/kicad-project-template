@@ -3,26 +3,6 @@ needs_setup: true
 # this is set to the name of your repo during setup, you can change it later on using the rename tool
 project_name: template
 
-# this holds all the name of the projects in the repo
-# as kicad only allow on PCB per project and lets say
-# you have a power hat for you board you would want 
-# both of these board in the same repo
-#
-# to add new projects just change the structure to
-#   Hardware
-#   ├{project_name}_DOCS
-#   ├{project_name}_PCB
-#   ├{project_name}_PROJECT
-#   └{sub_pcb_name}_PROJECT
-#       
-# and just add template_2 to the sub pcb names for example:
-# ========================================================
-# sub_pcb_names:
-#   - template
-#   - template_2
-# ========================================================
-sub_pcb_names: 
-
 # this is a list of the production formats that you would like
 # honestly only use gerbers, i doubt i will add anything else
 # but if you want something custom, implement it and throw in
