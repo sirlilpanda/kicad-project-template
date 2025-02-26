@@ -12,14 +12,15 @@ env:
   DRC_JOB_NAME : "📟 DRC report 📟"
 
 jobs:
-  setup_new_project:
+  setup_new_project: # this job only exists for project creation
     runs-on: ubuntu-latest
     name: set up project 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: read-yaml-file
+      # reads the project_setting.yaml file allowing you to access it with steps.id.outputs.[key]
+      - name: read yaml file
         uses: juliojimenez/yamler@v1.1.0
         id: yaml
         with:
@@ -77,10 +78,10 @@ jobs:
       - name: creating list start
         run:
           echo -n "projects=[" >> temp.txt
-
+      # this find commad outputs path1,path2,path3 with out the .kicad_pro ext
       - name: get kicad project names
         run:
-          find . -type f -name "*.kicad_sch" -exec sh -c 'echo -n "\"${0%.kicad_sch}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
+          find . -type f -name "*.kicad_pro" -exec sh -c 'echo -n "\"${0%.kicad_pro}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
 
       - name: creating list end
         run:
@@ -288,6 +289,14 @@ jobs:
           echo "bill_of_materials_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
           echo "production_format_file=${{steps.yaml.outputs.production_file_output_path}}${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
           echo "bom_report_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
+  
+
+      - name: checking envs
+        run:
+          echo "${{env.schematic_file}}"
+          echo "${{env.bill_of_materials_file}}"
+          echo "${{env.production_format_file}}"
+          echo "${{env.bom_report_file}}"
   
       - name: Setting up Python and chevron to processes reports
         # workflows really need some more work done on them
