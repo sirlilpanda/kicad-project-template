@@ -1,5 +1,5 @@
 # kicad project template
-[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=workflow_testing)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
+[![.github/workflows/main.yaml](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/sirlilpanda/kicad-project-template/actions/workflows/main.yaml)
 
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
@@ -106,6 +106,7 @@ where the action can not commit the changes due to not having permissions follow
 ![alt text](res/image-3.png)
 
 this should fix the problem if not, go harass stack overflow they need it
+Once all of these steps have been followed the workflow should be passing, however the `README.md` will only update on the next push request.
 Once all of these steps have been followed the workflow should be passing, however the `README.md` will only update on the next push request.
 
 ## editing the readme
