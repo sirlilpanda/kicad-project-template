@@ -215,6 +215,10 @@ jobs:
           report_format: json
           sch_erc_file: erc.json   
       
+      - name: tree
+        run:
+          ls -R
+
       - name: creating ERC report in markdown
         if: ${{ always() }}
         run: python
