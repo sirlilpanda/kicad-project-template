@@ -284,7 +284,7 @@ jobs:
           echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
       
       - name: setting env
-        run: #                                                                                      | the / here is defined in the project settings
+        run: | #                                                                                      | the / here is defined in the project settings
           echo "schematic_file=${{steps.yaml.outputs.schematic_output_path}}${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
           echo "bill_of_materials_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
           echo "production_format_file=${{steps.yaml.outputs.production_file_output_path}}${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
