@@ -474,10 +474,10 @@ jobs:
 
       - name: Moving files to correct location
         run: |  
-            mv ${{ github.workspace }}/production-files-*/*/*schematic.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*_bom_report.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*grbr.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*/*.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*/*.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*/*.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*/*.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
             
       - name: commit production files
         uses: EndBug/add-and-commit@v9
