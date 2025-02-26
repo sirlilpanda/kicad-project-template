@@ -76,7 +76,7 @@ jobs:
       
       - name: creating list start
         run:
-          echo -n "[" >> temp.txt
+          echo -n "projects=[" >> temp.txt
 
       - name: get kicad project names
         id: testing-projects
@@ -86,19 +86,14 @@ jobs:
       - name: creating list end
         run:
           echo -n "]" >> temp.txt
-      
-      - name: creating list end
-        run:
-          output=$(cat temp.txt | base64)
-        
 
       - name: creating list end
         run:
-          echo "$output"
+          cat temp.txt
   
       - name: creating list end
         run:
-          echo "projects=$output" >> "$GITHUB_OUTPUT"
+          cat temp.txt >> "$GITHUB_OUTPUT"
 
           # - name: get kicad project names
       #   id: projects
