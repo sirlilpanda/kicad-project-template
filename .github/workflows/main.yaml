@@ -216,6 +216,7 @@ jobs:
         with:
           kicad_pcb: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
+          sch_pdf: true
           report_format: json
           sch_erc_file: ${{ matrix.project_path }}/erc.json
       
