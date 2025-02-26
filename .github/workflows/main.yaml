@@ -285,10 +285,10 @@ jobs:
       
       - name: setting env
         run: | #                                                                                      | the / here is defined in the project settings
-          echo "schematic_file=${{steps.yaml.outputs.schematic_output_path}}${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
-          echo "bill_of_materials_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
-          echo "production_format_file=${{steps.yaml.outputs.production_file_output_path}}${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
-          echo "bom_report_file=${{steps.yaml.outputs.bom_csv_output_path}}${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
+          echo "schematic_file=${{env.PROJECT_NAME}}_schematic.pdf" >> $GITHUB_ENV
+          echo "bill_of_materials_file=${{env.PROJECT_NAME}}_bill_of_materials.csv" >> $GITHUB_ENV
+          echo "production_format_file=${{env.PROJECT_NAME}}_${{steps.yaml.outputs.production_format}}.zip" >> $GITHUB_ENV
+          echo "bom_report_file=${{env.PROJECT_NAME}}_bom_report.md" >> $GITHUB_ENV
   
 
       - name: checking envs
@@ -474,10 +474,10 @@ jobs:
 
       - name: Moving files to correct location
         run: |  
-            mv ${{ github.workspace }}/production-files-*/*/*.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*/*.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
+            mv ${{ github.workspace }}/production-files-*/*.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
             
       - name: commit production files
         uses: EndBug/add-and-commit@v9
