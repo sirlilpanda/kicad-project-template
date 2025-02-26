@@ -27,8 +27,10 @@ sub_pcb_names:
 # honestly only use gerbers, i doubt i will add anything else
 # but if you want something custom, implement it and throw in
 # a pull request
+# this is currently used to name the files that gets created in 
+# the production_file_output_path
 #not support
-production_formats: gerber
+production_format: gerber
 
 schematic_output_path: docs/
 
