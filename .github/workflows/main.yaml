@@ -140,6 +140,10 @@ jobs:
           report_format: json
           pcb_drc_file: drc.json
       
+      - name: tree
+        run:
+          ls -R
+          
       - name: creating DRC report in markdown
         if: ${{ always() }}
         run: python
