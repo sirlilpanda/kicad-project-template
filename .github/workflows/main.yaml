@@ -81,20 +81,12 @@ jobs:
       - name: get kicad project names
         run:
           find . -type f -name "*.kicad_sch" -exec sh -c 'echo -n "\"${0%.kicad_sch}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
-          
-      - name: get rid of trailing comma
-        run:
-          cat temp.txt 
-
-      - name: creating list end
-        run:
-          cat temp.txt 
 
       - name: creating list end
         run:
           echo "]" >> temp.txt
 
-      - name: creating list end
+      - name: list output
         run:
           cat temp.txt
   
@@ -103,367 +95,355 @@ jobs:
         run:
           cat temp.txt >> "$GITHUB_OUTPUT"
 
-          # - name: get kicad project names
+      # - name: get kicad project names
       #   id: projects
       #   run:
       #     python ${{ github.workspace }}/.github/get_pcb_names.py ${{ github.workspace }}/project_settings.yaml 
-
 
   DRC:
     runs-on: ubuntu-latest
     name: "📟 DRC report 📟"
     needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
-      - name: test
-        run:
-          echo ${{needs.setup_matrixs.outputs.projects}}
+      - name: check matrix
+        run: echo ${{ matrix.project_name }}
 
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-  # DRC:
-  #   runs-on: ubuntu-latest
-  #   name: "📟 DRC report 📟"
-  #   needs: setup_matrixs
-  #   strategy:
-  #     matrix:
-  #       project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
-  #   steps:
-  #     - name: check matrix
-  #       run: echo ${{ matrix.project_name }}
-
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: read-yaml-file
-  #       uses: juliojimenez/yamler@v1.1.0
-  #       id: yaml
-  #       with:
-  #         yaml-file: ${{ github.workspace }}/project_settings.yaml
-
-  #     - name: Setting up Python and chevron to processes reports
-  #       # workflows really need some more work done on them
-  #       uses: actions/setup-python@v5 
-  #       with:
-  #           python-version: '3.10'
-  #           cache: 'pip'
+      - name: Setting up Python and chevron to processes reports
+        # workflows really need some more work done on them
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
         
-  #     - name: installing requirements  
-  #       run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
+      - name: installing requirements  
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
-  #     - name: Run KiCad DRC
-  #       id: drc
-  #       uses: sparkengineering/kicad-action@v3
-  #       with:
-  #         kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
-  #         pcb_drc: true
-  #         report_format: json
-  #         pcb_drc_file: drc.json
+      - name: Run KiCad DRC
+        id: drc
+        uses: sparkengineering/kicad-action@v3
+        with:
+          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+          pcb_drc: true
+          report_format: json
+          pcb_drc_file: drc.json
       
-  #     - name: creating DRC report in markdown
-  #       if: ${{ always() }}
-  #       run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
+      - name: creating DRC report in markdown
+        if: ${{ always() }}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/drc.json ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md ${{ matrix.project_name }}
       
-  #     - name: upload report summary
-  #       if: ${{ always() }}
-  #       run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
+      - name: upload report summary
+        if: ${{ always() }}
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_drc.md >> $GITHUB_STEP_SUMMARY
       
-  #     - name: get summary url
-  #       if: ${{always()}}
-  #       id: exp
-  #       uses: pl-strflt/job-summary-url-action@v1
-  #       with:
-  #         job: "${{env.DRC_JOB_NAME}} (${{matrix.project_name}})"
+      - name: get summary url
+        if: ${{always()}}
+        id: exp
+        uses: pl-strflt/job-summary-url-action@v1
+        with:
+          job: "${{env.DRC_JOB_NAME}} (${{matrix.project_name}})"
 
-  #     - name: create files to upload
-  #       if: ${{always()}}
-  #       run: |
-  #         echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
+      - name: create files to upload
+        if: ${{always()}}
+        run: |
+          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_drc.json
         
-  #     - name: upload data for readme updating
-  #       if: ${{always()}}
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: ${{matrix.project_name}}_drc.json
-  #         path: ${{matrix.project_name}}_drc.json
+      - name: upload data for readme updating
+        if: ${{always()}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.project_name}}_drc.json
+          path: ${{matrix.project_name}}_drc.json
 
-  # ERC:
-  #   runs-on: ubuntu-latest
-  #   name: "⚡ERC report⚡"
-  #   needs: setup_matrixs
-  #   strategy:
-  #     matrix:
-  #       project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
-  #   steps:
-  #     - name: check matrix
-  #       run: echo ${{ matrix.project_name }}
+  ERC:
+    runs-on: ubuntu-latest
+    name: "⚡ERC report⚡"
+    needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
+    steps:
+      - name: check matrix
+        run: echo ${{ matrix.project_name }}
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: read-yaml-file
-  #       uses: juliojimenez/yamler@v1.1.0
-  #       id: yaml
-  #       with:
-  #         yaml-file: ${{ github.workspace }}/project_settings.yaml
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-  #     - name: Setting up Python and chevron to processes reports
-  #       # workflows really need some more work done on them
-  #       uses: actions/setup-python@v5 
-  #       with:
-  #           python-version: '3.10'
-  #           cache: 'pip'
+      - name: Setting up Python and chevron to processes reports
+        # workflows really need some more work done on them
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
         
-  #     - name: installing requirements  
-  #       run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
+      - name: installing requirements  
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
-  #     - name: Run KiCad ERC
-  #       id: erc
-  #       uses: sparkengineering/kicad-action@v3
-  #       with:
-  #         kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
-  #         sch_erc: true
-  #         report_format: json
-  #         sch_erc_file: erc.json   
+      - name: Run KiCad ERC
+        id: erc
+        uses: sparkengineering/kicad-action@v3
+        with:
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
+          sch_erc: true
+          report_format: json
+          sch_erc_file: erc.json   
       
-  #     - name: creating ERC report in markdown
-  #       if: ${{ always() }}
-  #       run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
+      - name: creating ERC report in markdown
+        if: ${{ always() }}
+        run: python ${{ github.workspace }}/.github/report_processing/process_json_reports.py ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/erc.json ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md ${{matrix.project_name}}
       
-  #     - name: upload report summary
-  #       if: ${{ always() }}
-  #       run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
+      - name: upload report summary
+        if: ${{ always() }}
+        run: cat ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{ matrix.project_name }}_erc.md >> $GITHUB_STEP_SUMMARY
       
-  #     - name: get summary url
-  #       if: ${{always()}}
-  #       id: exp
-  #       uses: pl-strflt/job-summary-url-action@v1
-  #       with:
-  #         job: "${{env.ERC_JOB_NAME}} (${{matrix.project_name}})"
+      - name: get summary url
+        if: ${{always()}}
+        id: exp
+        uses: pl-strflt/job-summary-url-action@v1
+        with:
+          job: "${{env.ERC_JOB_NAME}} (${{matrix.project_name}})"
 
-  #     - name: print summary url
-  #       if: ${{always()}}
-  #       run: echo '${{ steps.exp.outputs.job_summary_url }}'
-  #       shell: bash
+      - name: print summary url
+        if: ${{always()}}
+        run: echo '${{ steps.exp.outputs.job_summary_url }}'
+        shell: bash
 
-  #     - name: create files to upload
-  #       if: ${{always()}}
-  #       run: |
-  #         echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
+      - name: create files to upload
+        if: ${{always()}}
+        run: |
+          echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{matrix.project_name}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{matrix.project_name}}_erc.json
         
-  #     - name: upload data for readme updating
-  #       if: ${{always()}}
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: ${{matrix.project_name}}_erc.json
-  #         path: ${{matrix.project_name}}_erc.json
+      - name: upload data for readme updating
+        if: ${{always()}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.project_name}}_erc.json
+          path: ${{matrix.project_name}}_erc.json
 
-  # production_job:
-  #   runs-on: ubuntu-latest
-  #   name: creating production files bom sch gerbers 📂 
-  #   needs: setup_matrixs
-  #   strategy:
-  #     matrix:
-  #       project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  production_job:
+    runs-on: ubuntu-latest
+    name: creating production files bom sch gerbers 📂 
+    needs: setup_matrixs
+    strategy:
+      matrix:
+        project_name: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: read-yaml-file
-  #       uses: juliojimenez/yamler@v1.1.0
-  #       id: yaml
-  #       with:
-  #         yaml-file: ${{ github.workspace }}/project_settings.yaml
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-  #     - name: Setting up Python and chevron to processes reports
-  #       # workflows really need some more work done on them
-  #       if: ${{ !cancelled() }} 
-  #       uses: actions/setup-python@v5 
-  #       with:
-  #           python-version: '3.10'
-  #           cache: 'pip'
+      - name: Setting up Python and chevron to processes reports
+        # workflows really need some more work done on them
+        if: ${{ !cancelled() }} 
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
         
-  #     - name: installing requirements  
-  #       if: ${{ !cancelled() }} 
-  #       run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
+      - name: installing requirements  
+        if: ${{ !cancelled() }} 
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
-  #     - name: Export production files
-  #       id: production
-  #       uses: sparkengineering/kicad-action@v3
-  #       if: '!cancelled()'
-  #       with:
-  #         kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
-  #         sch_pdf: true # Generate PDF
-  #         sch_bom: true # Generate BOM
-  #         kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
-  #         pcb_gerbers: true # Generate Gerbers
+      - name: Export production files
+        id: production
+        uses: sparkengineering/kicad-action@v3
+        if: '!cancelled()'
+        with:
+          kicad_sch: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_sch
+          sch_pdf: true # Generate PDF
+          sch_bom: true # Generate BOM
+          kicad_pcb: Hardware/${{matrix.project_name}}_PROJECT/${{matrix.project_name}}.kicad_pcb
+          pcb_gerbers: true # Generate Gerbers
 
-  #     - name: Moving production files to correct location
-  #       if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
-  #       run: |  
-  #           mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
-  #           mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
-  #           mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
+      - name: Moving production files to correct location
+        if: ${{ !cancelled() && steps.production.conclusion == 'success' }}
+        run: |  
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/sch.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/bom.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            mv ${{ github.workspace }}/Hardware/${{matrix.project_name}}_PROJECT/gbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
-  #     - name: creating BOM report in markdown
-  #       if: ${{ !cancelled() }} 
-  #       run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+      - name: creating BOM report in markdown
+        if: ${{ !cancelled() }} 
+        run: python ${{ github.workspace }}/.github/report_processing/process_bom_files.py ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}} ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
             
 
-  #     - name: upload report'
-  #       uses: actions/upload-artifact@v4
-  #       with: 
-  #         name: production-files-${{matrix.project_name}}.zip
-  #         path: |
-  #           ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
-  #           ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
-  #           ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
-  #           ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
+      - name: upload report'
+        uses: actions/upload-artifact@v4
+        with: 
+          name: production-files-${{matrix.project_name}}.zip
+          path: |
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md
+            ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip
 
-  #     - name: data for readme updating
-  #       if: ${{always()}}
-  #       run: |
-  #         echo "{" >> ${{matrix.project_name}}_project.json
-  #         echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
-  #         echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
-  #         echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
-  #         echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
-  #         echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
-  #         echo "\"project_name\":\"${{matrix.project_name}}\"" >> ${{matrix.project_name}}_project.json
-  #         echo "}" >> ${{matrix.project_name}}_project.json
+      - name: data for readme updating
+        if: ${{always()}}
+        run: |
+          echo "{" >> ${{matrix.project_name}}_project.json
+          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/${{matrix.project_name}}_schematic.pdf\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{matrix.project_name}}_bill_of_materials.csv\"," >> ${{matrix.project_name}}_project.json
+          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/${{ matrix.project_name }}_bom_report.md\"," >> ${{matrix.project_name}}_project.json
+          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/${{matrix.project_name}}_grbr.zip\"," >> ${{matrix.project_name}}_project.json
+          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/Hardware/${{matrix.project_name}}_PROJECT\"," >> ${{matrix.project_name}}_project.json
+          echo "\"project_name\":\"${{matrix.project_name}}\"" >> ${{matrix.project_name}}_project.json
+          echo "}" >> ${{matrix.project_name}}_project.json
 
-  #     - name: upload report
-  #       if: ${{always()}}
-  #       uses: actions/upload-artifact@v4
-  #       with: 
-  #         name: ${{matrix.project_name}}_project.json
-  #         path: ${{matrix.project_name}}_project.json
+      - name: upload report
+        if: ${{always()}}
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ${{matrix.project_name}}_project.json
+          path: ${{matrix.project_name}}_project.json
 
-  # readme_job:
-  #   runs-on: ubuntu-latest
-  #   name: update readme
-  #   if: ${{ always() }}
-  #   needs: [DRC, ERC, production_job]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  readme_job:
+    runs-on: ubuntu-latest
+    name: update readme
+    if: ${{ always() }}
+    needs: [DRC, ERC, production_job]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: read-yaml-file
-  #       uses: juliojimenez/yamler@v1.1.0
-  #       id: yaml
-  #       with:
-  #         yaml-file: ${{ github.workspace }}/project_settings.yaml
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-  #     - name: download ercs files
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         pattern: "*_erc.json"
-  #         path: ${{ github.workspace }}
+      - name: download ercs files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_erc.json"
+          path: ${{ github.workspace }}
       
-  #     - name: download drcs files
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         pattern: "*_drc.json"
-  #         path: ${{ github.workspace }}
+      - name: download drcs files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_drc.json"
+          path: ${{ github.workspace }}
 
-  #     - name: download production json files
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         pattern: "*_project.json"
-  #         path: ${{ github.workspace }}
+      - name: download production json files
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_project.json"
+          path: ${{ github.workspace }}
 
-  #     - name: Setting up Python
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       uses: actions/setup-python@v5 
-  #       with:
-  #           python-version: '3.10'
-  #           cache: 'pip'
-  #     - name: installing requirements  
-  #       if: ${{ !cancelled() && steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
+      - name: Setting up Python
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        uses: actions/setup-python@v5 
+        with:
+            python-version: '3.10'
+            cache: 'pip'
+      - name: installing requirements  
+        if: ${{ !cancelled() && steps.yaml.outputs.dynamic_read_me == 'true' }}
+        run: pip install -r ${{ github.workspace }}/.github/report_processing/requirements.txt
 
-  #     - name: create extra info for readme hash
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       run: |
-  #         echo "{" >> readme_extras.json
-  #         echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg?branch=${{github.ref_name}})](https://github.com/${{github.repository}}/actions/workflows/main.yaml)\"," >> readme_extras.json
-  #         echo "\"lastest_action_run_link\" : \"https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}\"," >> readme_extras.json
-  #         echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\"" >> readme_extras.json
-  #         echo "}" >> readme_extras.json
-  #     - name: show extras
-  #       run: 
-  #         cat readme_extras.json
+      - name: create extra info for readme hash
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        run: |
+          echo "{" >> readme_extras.json
+          echo "\"badge\" : \"[![.github/workflows/main.yaml](https://github.com/${{github.repository}}/actions/workflows/main.yaml/badge.svg?branch=${{github.ref_name}})](https://github.com/${{github.repository}}/actions/workflows/main.yaml)\"," >> readme_extras.json
+          echo "\"lastest_action_run_link\" : \"https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}\"," >> readme_extras.json
+          echo "\"title\" : \"${{steps.yaml.outputs.project_name}}\"" >> readme_extras.json
+          echo "}" >> readme_extras.json
+      - name: show extras
+        run: 
+          cat readme_extras.json
 
-  #     - name: create new readme
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       run: 
-  #         python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template_path}} *.json
+      - name: create new readme
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        run: 
+          python ${{ github.workspace }}/.github/report_processing/process_output_files.py ${{ github.workspace }}/${{steps.yaml.outputs.readme_template_path}} *.json
 
-  #     - name: upload data for readme updating
-  #       if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: README.md
-  #         path: README.md
+      - name: upload data for readme updating
+        if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: README.md
+          path: README.md
 
-  #     - name: list everything
-  #       if: ${{always()}}
-  #       run: ls -R
+      - name: list everything
+        if: ${{always()}}
+        run: ls -R
   
-  # upload_job:
-  #   runs-on: ubuntu-latest
-  #   name: commit production files 
-  #   if: ${{ always() }}
-  #   needs: [readme_job]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  upload_job:
+    runs-on: ubuntu-latest
+    name: commit production files 
+    if: ${{ always() }}
+    needs: [readme_job]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: read-yaml-file
-  #       uses: juliojimenez/yamler@v1.1.0
-  #       id: yaml
-  #       with:
-  #         yaml-file: ${{ github.workspace }}/project_settings.yaml
+      - name: read-yaml-file
+        uses: juliojimenez/yamler@v1.1.0
+        id: yaml
+        with:
+          yaml-file: ${{ github.workspace }}/project_settings.yaml
 
-  #     - name: download production files
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         pattern: production-files-*
-  #         path: ${{ github.workspace }}
+      - name: download production files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: production-files-*
+          path: ${{ github.workspace }}
 
-  #     - name: download readme
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: README.md
-  #         path: ${{ github.workspace }}
+      - name: download readme
+        uses: actions/download-artifact@v4
+        with:
+          name: README.md
+          path: ${{ github.workspace }}
   
-  #     - name: check downloads
-  #       run: ls -R
+      - name: check downloads
+        run: ls -R
 
-  #     - name: Moving files to correct location
-  #       run: |  
-  #           mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/*schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/
-  #           mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
-  #           mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
-  #           mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
+      - name: Moving files to correct location
+        run: |  
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/*schematic.pdf ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/
+            mv ${{ github.workspace }}/production-files-*/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/
             
-  #     - name: commit production files
-  #       uses: EndBug/add-and-commit@v9
-  #       with:
-  #           default_author: github_actions
-  #           message: 'production files'
-  #           push: true
-  #           pull: '--rebase --autostash'
-  #           tag_push: '--force' # just makes life easier
-  #           tag: 'v1.0.0 --force'
-  #           add: |
-  #             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
-  #             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
-  #             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
-  #             ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
-  #             ${{ github.workspace }}/README.md
-  #     - name: list everything
-  #       if: ${{always()}}
-  #       run: ls -R
+      - name: commit production files
+        uses: EndBug/add-and-commit@v9
+        with:
+            default_author: github_actions
+            message: 'production files'
+            push: true
+            pull: '--rebase --autostash'
+            tag_push: '--force' # just makes life easier
+            tag: 'v1.0.0 --force'
+            add: |
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/*_schematic.pdf
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*bill_of_materials.csv
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_DOCS/BOM/*_bom_report.md
+              ${{ github.workspace }}/Hardware/${{steps.yaml.outputs.project_name}}_PCB/*grbr.zip
+              ${{ github.workspace }}/README.md
+      - name: list everything
+        if: ${{always()}}
+        run: ls -R
