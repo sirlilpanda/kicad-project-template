@@ -27,8 +27,6 @@ sub_pcb_names:
 # honestly only use gerbers, i doubt i will add anything else
 # but if you want something custom, implement it and throw in
 # a pull request
-# this is currently used to name the files that gets created in 
-# the production_file_output_path
 #not support
 production_format: gerber
 
@@ -39,6 +37,19 @@ bom_csv_output_path: docs/BOM/
 bom_report_output_path: docs/BOM/
 
 production_file_output_path: pcbs/
+
+# all names will follow the pattern [project_name]name.* 
+# these settings just define that name prefix
+# the underscore here are purely for readablity of the
+# output files so the schematic output file name will be
+# project_name_schematic.pdf
+schematic_output_name: _schematic
+
+bom_csv_output_name: _bill_of_materials
+
+bom_report_output_name: _bom_report
+
+production_file_output_name: _grbr
 
 # these templates use mustache (https://mustache.github.io/mustache.5.html)
 # a logic less templating langauge for templating just about anything
