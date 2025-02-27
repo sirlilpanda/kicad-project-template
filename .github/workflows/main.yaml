@@ -85,20 +85,7 @@ jobs:
       # with the project name
       # this output will look like
       # projects=["path/projet_name", "path/projet_name2", ...]
-      #
       - name: get kicad project names
-        run:
-          find . -type f -name "*.kicad_pro" -exec sh -c 'echo -n "\"${0%.kicad_pro}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
-
-      - name: creating list end
-        run:
-          echo "]" >> temp.txt
-
-      - name: list output
-        run:
-          cat temp.txt
-  
-      - name: creating list end
         run:
           find . -type f -name "*.kicad_pro" -exec sh -c 'echo -n "\"${0%.kicad_pro}\","' {} \; | sed 's/.\{1\}$//' >> temp.txt
 
