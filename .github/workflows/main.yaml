@@ -13,15 +13,12 @@ env:
 
 jobs:
   setup_new_project: # this job only exists for project creation
-  setup_new_project: # this job only exists for project creation
     runs-on: ubuntu-latest
     name: set up project 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # reads the project_setting.yaml file allowing you to access it with steps.id.outputs.[key]
-      - name: read yaml file
       # reads the project_setting.yaml file allowing you to access it with steps.id.outputs.[key]
       - name: read yaml file
         uses: juliojimenez/yamler@v1.1.0
@@ -128,7 +125,6 @@ jobs:
     strategy:
       matrix:
         project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
-        project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
 
 
@@ -179,16 +175,9 @@ jobs:
           ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}}
           ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md
           ${{ env.PROJECT_NAME }}
-        run: python
-          ${{ github.workspace }}/.github/report_processing/process_json_reports.py 
-          ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/drc.json
-          ${{ github.workspace }}/${{steps.yaml.outputs.drc_report_template_path}}
-          ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md
-          ${{ env.PROJECT_NAME }}
-      
+
       - name: upload report summary
         if: ${{ always() }}
-        run: cat ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md >> $GITHUB_STEP_SUMMARY
         run: cat ${{ github.workspace }}/${{ env.PROJECT_NAME }}_drc.md >> $GITHUB_STEP_SUMMARY
       
       - name: get summary url
@@ -197,20 +186,16 @@ jobs:
         uses: pl-strflt/job-summary-url-action@v1
         with:
           job: "${{env.DRC_JOB_NAME}} (${{matrix.project_path}})"
-          job: "${{env.DRC_JOB_NAME}} (${{matrix.project_path}})"
 
       - name: create files to upload
         if: ${{always()}}
         run: |
-          echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{env.PROJECT_NAME}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{env.PROJECT_NAME}}_drc.json
           echo "{\"passing_drc\":\"${{steps.drc.conclusion != 'failure'}}\",\"project_name\":\"${{env.PROJECT_NAME}}\", \"drc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{env.PROJECT_NAME}}_drc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.PROJECT_NAME}}_drc.json
-          path: ${{env.PROJECT_NAME}}_drc.json
           name: ${{env.PROJECT_NAME}}_drc.json
           path: ${{env.PROJECT_NAME}}_drc.json
 
@@ -221,7 +206,6 @@ jobs:
     strategy:
       matrix:
         project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
-        project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
       - name: check matrix
         run: basename ${{ matrix.project_path }}
@@ -229,7 +213,6 @@ jobs:
       - name: setting env
         run:
           echo "PROJECT_NAME=$(basename ${{ matrix.project_path }})" >> $GITHUB_ENV
-        run: basename ${{ matrix.project_path }}
 
       - name: setting env
         run:
@@ -259,7 +242,6 @@ jobs:
         uses: sparkengineering/kicad-action@v3
         with:
           kicad_sch: ${{ matrix.project_path }}.kicad_sch
-          kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
           report_format: json
           sch_erc_file: erc.json
@@ -276,16 +258,9 @@ jobs:
           ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}}
           ${{ github.workspace }}/${{ env.PROJECT_NAME }}_erc.md
           ${{ env.PROJECT_NAME }}
-        run: python
-          ${{ github.workspace }}/.github/report_processing/process_json_reports.py 
-          ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/erc.json
-          ${{ github.workspace }}/${{steps.yaml.outputs.erc_report_template_path}}
-          ${{ github.workspace }}/${{ env.PROJECT_NAME }}_erc.md
-          ${{ env.PROJECT_NAME }}
       
       - name: upload report summary
         if: ${{ always() }}
-        run: cat ${{ github.workspace }}/${{ env.PROJECT_NAME }}_erc.md >> $GITHUB_STEP_SUMMARY
         run: cat ${{ github.workspace }}/${{ env.PROJECT_NAME }}_erc.md >> $GITHUB_STEP_SUMMARY
       
       - name: get summary url
@@ -293,8 +268,6 @@ jobs:
         id: exp
         uses: pl-strflt/job-summary-url-action@v1
         with:
-          job: "${{env.ERC_JOB_NAME}} (${{matrix.project_path}})"
-  
           job: "${{env.ERC_JOB_NAME}} (${{matrix.project_path}})"
   
       - name: print summary url
@@ -307,14 +280,11 @@ jobs:
         if: ${{always()}}
         run: |
           echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{env.PROJECT_NAME}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{env.PROJECT_NAME}}_erc.json
-          echo "{\"passing_erc\":\"${{steps.erc.conclusion != 'failure'}}\",\"project_name\":\"${{env.PROJECT_NAME}}\", \"erc_summary_link\":\"${{ steps.exp.outputs.job_summary_url }}\"}" >> ${{env.PROJECT_NAME}}_erc.json
         
       - name: upload data for readme updating
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.PROJECT_NAME}}_erc.json
-          path: ${{env.PROJECT_NAME}}_erc.json
           name: ${{env.PROJECT_NAME}}_erc.json
           path: ${{env.PROJECT_NAME}}_erc.json
 
@@ -324,7 +294,6 @@ jobs:
     needs: setup_matrixs
     strategy:
       matrix:
-        project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
         project_path: ${{ fromJSON(needs.setup_matrixs.outputs.projects) }}
     steps:
       - name: Checkout
@@ -395,10 +364,8 @@ jobs:
         if: '!cancelled()'
         with:
           kicad_sch: ${{ matrix.project_path }}.kicad_sch
-          kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_pdf: true # Generate PDF
           sch_bom: true # Generate BOM
-          kicad_pcb: ${{ matrix.project_path }}.kicad_pcb
           kicad_pcb: ${{ matrix.project_path }}.kicad_pcb
           pcb_gerbers: true # Generate Gerbers
 
@@ -408,9 +375,7 @@ jobs:
             mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{ github.workspace }}/${{env.schematic_file}}
             mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{ github.workspace }}/${{env.bill_of_materials_file}}
             mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{ github.workspace }}/${{env.production_format_file}}
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/sch.pdf ${{ github.workspace }}/${{env.schematic_file}}
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/bom.csv ${{ github.workspace }}/${{env.bill_of_materials_file}}
-            mv ${{ github.workspace }}/$(dirname ${{matrix.project_path}})/gbr.zip ${{ github.workspace }}/${{env.production_format_file}}
+
 
       - name: creating BOM report in markdown
         if: ${{ !cancelled() }} 
@@ -419,23 +384,12 @@ jobs:
           ${{ github.workspace }}/${{env.bill_of_materials_file}}
           ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}}
           ${{ github.workspace }}/${{env.bom_report_file}}
-        run: python 
-          ${{ github.workspace }}/.github/report_processing/process_bom_files.py 
-          ${{ github.workspace }}/${{env.bill_of_materials_file}}
-          ${{ github.workspace }}/${{steps.yaml.outputs.bom_template_path}}
-          ${{ github.workspace }}/${{env.bom_report_file}}
-            
 
       - name: upload report'
         uses: actions/upload-artifact@v4
         with: 
           name: production-files-${{env.PROJECT_NAME}}.zip
-          name: production-files-${{env.PROJECT_NAME}}.zip
           path: |
-            ${{ github.workspace }}/${{env.schematic_file}}
-            ${{ github.workspace }}/${{env.bill_of_materials_file}}
-            ${{ github.workspace }}/${{env.production_format_file}}
-            ${{ github.workspace }}/${{env.bom_report_file}}
             ${{ github.workspace }}/${{env.schematic_file}}
             ${{ github.workspace }}/${{env.bill_of_materials_file}}
             ${{ github.workspace }}/${{env.production_format_file}}
@@ -452,21 +406,11 @@ jobs:
           echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/$(dirname ${{matrix.project_path}})\"," >> ${{env.PROJECT_NAME}}_project.json
           echo "\"project_name\":\"${{env.PROJECT_NAME}}\"" >> ${{env.PROJECT_NAME}}_project.json
           echo "}" >> ${{env.PROJECT_NAME}}_project.json
-          echo "{" >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"schematic_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.schematic_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"bom_csv_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.bill_of_materials_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"bom_report_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.bom_report_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"gerber_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{env.production_format_file}}\"," >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"project_link\":\"https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/$(dirname ${{matrix.project_path}})\"," >> ${{env.PROJECT_NAME}}_project.json
-          echo "\"project_name\":\"${{env.PROJECT_NAME}}\"" >> ${{env.PROJECT_NAME}}_project.json
-          echo "}" >> ${{env.PROJECT_NAME}}_project.json
 
       - name: upload report
         if: ${{always()}}
         uses: actions/upload-artifact@v4
         with: 
-          name: ${{env.PROJECT_NAME}}_project.json
-          path: ${{env.PROJECT_NAME}}_project.json
           name: ${{env.PROJECT_NAME}}_project.json
           path: ${{env.PROJECT_NAME}}_project.json
 
@@ -534,9 +478,6 @@ jobs:
           python 
           ${{ github.workspace }}/.github/report_processing/process_output_files.py 
           ${{ github.workspace }}/${{steps.yaml.outputs.readme_template_path}} *.json
-          python 
-          ${{ github.workspace }}/.github/report_processing/process_output_files.py 
-          ${{ github.workspace }}/${{steps.yaml.outputs.readme_template_path}} *.json
 
       - name: upload data for readme updating
         if: ${{ steps.yaml.outputs.dynamic_read_me == 'true' }}
@@ -585,10 +526,6 @@ jobs:
             mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.bom_csv_output_name}}.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
             mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.bom_report_output_name}}.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
             mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.production_file_output_name}}.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.schematic_output_name}}.pdf ${{ github.workspace }}/${{steps.yaml.outputs.schematic_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.bom_csv_output_name}}.csv ${{ github.workspace }}/${{steps.yaml.outputs.bom_csv_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.bom_report_output_name}}.md ${{ github.workspace }}/${{steps.yaml.outputs.bom_report_output_path}}
-            mv ${{ github.workspace }}/production-files-*/*${{steps.yaml.outputs.production_file_output_name}}.zip ${{ github.workspace }}/${{steps.yaml.outputs.production_file_output_path}}
             
       - name: commit production files
         uses: EndBug/add-and-commit@v9
@@ -600,10 +537,6 @@ jobs:
             tag_push: '--force' # just makes life easier
             tag: 'v1.0.0 --force'
             add: |
-              ${{ github.workspace }}/*${{steps.yaml.outputs.schematic_output_name}}.pdf
-              ${{ github.workspace }}/*${{steps.yaml.outputs.bom_csv_output_name}}.csv
-              ${{ github.workspace }}/*${{steps.yaml.outputs.bom_report_output_name}}.md
-              ${{ github.workspace }}/*${{steps.yaml.outputs.production_file_output_name}}.zip
               ${{ github.workspace }}/*${{steps.yaml.outputs.schematic_output_name}}.pdf
               ${{ github.workspace }}/*${{steps.yaml.outputs.bom_csv_output_name}}.csv
               ${{ github.workspace }}/*${{steps.yaml.outputs.bom_report_output_name}}.md
