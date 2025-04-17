@@ -143,7 +143,7 @@ jobs:
 
       - name: Run KiCad DRC
         id: drc
-        uses: sparkengineering/kicad-action@v3
+        uses: sparkengineering/kicad-action@v4
         with:
           kicad_pcb: ${{ matrix.project_path }}.kicad_pcb
           pcb_drc: true
@@ -226,7 +226,7 @@ jobs:
 
       - name: Run KiCad ERC
         id: erc
-        uses: sparkengineering/kicad-action@v3
+        uses: sparkengineering/kicad-action@v4
         with:
           kicad_sch: ${{ matrix.project_path }}.kicad_sch
           sch_erc: true
@@ -347,7 +347,7 @@ jobs:
 
       - name: Export production files
         id: production
-        uses: sparkengineering/kicad-action@v3
+        uses: sparkengineering/kicad-action@v4
         if: '!cancelled()'
         with:
           kicad_sch: ${{ matrix.project_path }}.kicad_sch
