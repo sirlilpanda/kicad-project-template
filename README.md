@@ -4,7 +4,7 @@
 a cool table showing the workflow of all the kicad projects.
 | project_name | DRC | ERC |
 | ------------ | --- | --- |
-| template | [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13563443296/attempts/1#summary-37911156680)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13563443296/attempts/1#summary-37911157036) | 
+| template | [❌](https://github.com/sirlilpanda/kicad-project-template/actions/runs/14507154830/attempts/1#summary-40698563204)| [✅](https://github.com/sirlilpanda/kicad-project-template/actions/runs/14507154830/attempts/1#summary-40698563199) | 
 
 for a quick guide check [project setup](#project-setup)
 
@@ -15,7 +15,7 @@ This is a simple project template for new kicad projects. This template has some
 - [schematic pdf](https://github.com/sirlilpanda/kicad-project-template/tree/main/template_schematic.pdf)
 
 
-This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/13563443296). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
+This workflow will also run the design rules check on the PCB and schematic to ensure that you upload a working PCB. These reports are uploaded as summaries within the github [actions tab](https://github.com/sirlilpanda/kicad-project-template/actions/runs/14507154830). This template has a simple schematic PCB in it (because DRC fails on an empty PCB). Shown below is the example PCB.
 
 ![example pcb with battery diode and resistor](res/image.png)
 
